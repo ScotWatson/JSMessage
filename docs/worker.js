@@ -55,7 +55,7 @@ async function start( [ ErrorLog ] ) {
       myPort.postMessage(evt.data + "-data");
     }
     function myMessageErrorHandler(evt) {
-      myPort.postMessage("port message error");
+      self.postMessage("port message error");
     }
   } catch (e) {
     ErrorLog.rethrow({
