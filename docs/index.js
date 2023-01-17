@@ -51,7 +51,6 @@ async function start( [ evtWindow, ErrorLog ] ) {
           port: newChannel.port2,
         };
         newChannel.port1.start();
-        newChannel.port2.start();
         myWorker.postMessage(obj, [ newChannel.port2 ] );
         console.log("port sent");
       }
