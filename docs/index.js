@@ -51,6 +51,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
           port: newChannel.port2,
         };
         myWorker.postMessage(obj, [ newChannel.port2 ] );
+        console.log("port sent");
       }
     }
     function mainMessageErrorHandler(evt) {
