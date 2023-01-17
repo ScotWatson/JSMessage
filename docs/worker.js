@@ -39,6 +39,9 @@ async function start( [ ErrorLog ] ) {
           self.postMessage("connected");
           myPort.start();
           myPort.postMessage("data");
+          setTimeout(function () {
+            myPort.close();
+          }, 1000);
         } else {
           // Close and discard received port
           evt.data.port.close();
@@ -52,6 +55,7 @@ async function start( [ ErrorLog ] ) {
       myPort.postMessage(evt.data + "-data");
     }
     function myMessageErrorHandler(evt) {
+      myPort.postMessage("port message error");
     }
   } catch (e) {
     ErrorLog.rethrow({
