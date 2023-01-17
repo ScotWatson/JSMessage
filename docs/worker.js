@@ -35,7 +35,7 @@ async function start( [ ErrorLog ] ) {
           self.postMessage("Hello MessagePort");
         }
         if (myPort === undefined) {
-          myPort = evt.data;
+          myPort = evt.data.port;
           myPort.addEventListener("message", myMessageHandler);
           myPort.addEventListener("messageerror", myMessageErrorHandler);
           self.postMessage("connected");
