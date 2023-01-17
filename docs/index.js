@@ -47,7 +47,9 @@ async function start( [ evtWindow, ErrorLog ] ) {
     function mainMessageHandler(evt) {
       console.log(evt);
       if (evt.data === "hello") {
-        myWorker.postMessage(newChannel.port2, [ newChannel.port2 ] );
+        myWorker.postMessage({
+          port: newChannel.port2,
+        }, [ newChannel.port2 ] );
       }
     }
     function mainMessageErrorHandler(evt) {
