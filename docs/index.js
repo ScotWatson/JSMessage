@@ -61,7 +61,9 @@ async function start( [ evtWindow, ErrorLog ] ) {
     }
     function newMessageHandler(evt) {
       console.log(evt);
-      newChannel.port1.postMessage("response");
+      if (evt.data === "data") {
+        newChannel.port1.postMessage("response");
+      }
     }
     function newMessageErrorHandler(evt) {
       console.error(evt);
