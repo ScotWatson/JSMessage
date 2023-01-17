@@ -46,8 +46,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     newChannel.port1.addEventListener("messageerror", newMessageErrorHandler);
     function mainMessageHandler(evt) {
       console.log(evt);
-      console.log(evt.data === "hello");
-      if (evt.data === "hello") {
+      if (evt.data === "Hello") {
         const obj = {
           port: newChannel.port2,
         };
