@@ -30,6 +30,7 @@ async function start( [ ErrorLog ] ) {
     self.addEventListener("messageerror", mainMessageErrorHandler);
     self.postMessage("Hello");
     function mainMessageHandler(evt) {
+      self.postMessage("echo");
       if ("port" in evt.data) {
         if (evt.data.port instanceof MessagePort) {
           self.postMessage("Hello MessagePort");
