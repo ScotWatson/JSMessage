@@ -42,6 +42,12 @@ async function start( [ ErrorLog ] ) {
           setTimeout(function () {
             myPort.close();
           }, 1000);
+          setTimeout(function () {
+            myPort.start();
+          }, 2000);
+          setTimeout(function () {
+            myPort.close();
+          }, 3000);
         } else {
           // Close and discard received port
           evt.data.port.close();
