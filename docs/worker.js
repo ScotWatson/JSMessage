@@ -48,7 +48,7 @@ async function start( [ ErrorLog ] ) {
       self.postMessage(evt);
     }
     function myMessageHandler(evt) {
-      myPort.postMessage("data2");
+      myPort.postMessage(evt.data + "-data");
     }
     function myMessageErrorHandler(evt) {
     }
