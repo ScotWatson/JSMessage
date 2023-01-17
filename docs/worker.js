@@ -32,9 +32,6 @@ async function start( [ ErrorLog ] ) {
     function mainMessageHandler(evt) {
       self.postMessage("echo");
       if ("port" in evt.data) {
-        if (evt.data.port instanceof MessagePort) {
-          self.postMessage("Hello MessagePort");
-        }
         if (myPort === undefined) {
           myPort = evt.data.port;
           myPort.addEventListener("message", myMessageHandler);
@@ -42,7 +39,8 @@ async function start( [ ErrorLog ] ) {
           self.postMessage("connected");
           myPort.postMessage("data");
         } else {
-          // Discard received port
+          // Close and discard received port
+          evt.data.port.close();
         }
       }
     }
