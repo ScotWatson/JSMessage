@@ -25,7 +25,77 @@ export class Thread {
   }
 }
 
-export function evtListener(evt) {
+export function createEvtListenerWindowForWorker(worker) {
+  return function evtListenerWindowForWorker(evt) {
+    try {
+      if (!(Types.isSimpleObject(evt.data))) {
+        throw "data must be a simple object.";
+      }
+      switch (evt.data.type) {
+        case "openChannel":
+          evt.data.name;
+          evt.data.port;
+          break;
+        case "closeChannel":
+          evt.data.name;
+          break;
+        case "badCommand":
+          throw "Bad Command: " + evt.data.message;
+          break;
+        default:
+          worker.postmessage({
+            type: "badCommand",
+            message: "Unrecognized Command Type",
+          });
+      };
+    } catch (e) {
+    }
+  }
+}
+
+const ports = new Map();
+
+function allowChannel(channelName) {
+}
+function requestChannel(channelName) {
+}
+
+class MessageChannelNode {
+  #callback;
+  #port;
+  #staticListener;
+  constructor(args) {
+    this.#port = args.port;
+    this.#staticListener = Tasks.createStatic({
+      function: this.#listener,
+      this: this,
+    });
+    this.#port.addEventListener(this.#staticListener);
+    this.#port.start();
+    this.#signalClosed = args.signalClosed;
+  }
+  connectOutput(args) {
+    this.#callback = args.callback;
+  }
+  get inputCallback(args) {
+    return new Tasks.Callback({
+      invoke: function () {
+        self.postMessage(args.obj);
+      },
+    });
+  }
+  closeOutput() {
+    this.#port.close();
+  }
+  get signalClosed() {
+    return this.#signalClosed;
+  }
+  #listener(evt) {
+    this.#callback.invoke(evt.data);
+  }
+}
+
+export function evtListenerWorker(evt) {
   if (!(Types.isSimpleObject(evt.data))) {
     throw "data must be a simple object.";
   }
@@ -39,7 +109,13 @@ export function evtListener(evt) {
       break;
     case "requestChannel":
       break;
+    case "badCommand":
+      evt.data
+      break;
     default:
-      throw "Unrecognized Command Type";
+      self.postmessage({
+        type: "badCommand",
+        message: "Unrecognized Command Type",
+      });
   };
 }
