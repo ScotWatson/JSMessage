@@ -7,8 +7,6 @@ import * as Types from "https://scotwatson.github.io/Debug/Test/Types.mjs";
 import * as ErrorLog from "https://scotwatson.github.io/Debug/Test/ErrorLog.mjs";
 import * as Tasks from "https://scotwatson.github.io/Tasks/Test/Tasks.mjs";
 
-
-
 export class openChannel() {
 }
 
@@ -16,6 +14,9 @@ export class Thread {
   #worker; // could be Worker, SharedWorker, or ServiceWorker
   constructor() {
     this.#worker = new self.Worker();
+    this.#type
+    this.#credentials
+    this.#name
   }
   async openChannel(args) {
     return {
@@ -43,7 +44,7 @@ export function createEvtListenerWindowForWorker(worker) {
           throw "Bad Command: " + evt.data.message;
           break;
         default:
-          worker.postmessage({
+          worker.postMessage({
             type: "badCommand",
             message: "Unrecognized Command Type",
           });
@@ -53,12 +54,6 @@ export function createEvtListenerWindowForWorker(worker) {
   }
 }
 
-const ports = new Map();
-
-function allowChannel(channelName) {
-}
-function requestChannel(channelName) {
-}
 
 class MessageChannelNode {
   #callback;
@@ -95,7 +90,10 @@ class MessageChannelNode {
   }
 }
 
-export function evtListenerWorker(evt) {
+
+// WindowMessaging.mjs
+
+self.addEventListener("message", function (evt) {
   if (!(Types.isSimpleObject(evt.data))) {
     throw "data must be a simple object.";
   }
@@ -113,9 +111,53 @@ export function evtListenerWorker(evt) {
       evt.data
       break;
     default:
-      self.postmessage({
+      self.postMessage({
         type: "badCommand",
         message: "Unrecognized Command Type",
       });
   };
+});
+
+self.addEventListener("messageerror", function (evt) {
+});
+
+
+// WorkerMessaging.mjs
+
+const ports = new Map();
+
+function allowChannel(channelName) {
 }
+function createChannel(channelName) {
+}
+
+self.addEventListener("message", function (evt) {
+  if (!(Types.isSimpleObject(evt.data))) {
+    throw "data must be a simple object.";
+  }
+  switch (evt.data.type) {
+    case "openChannel":
+      evt.data.name
+      break;
+    case "transferPort":
+      evt.data.name
+      evt.data.port
+      break;
+    case "requestChannel":
+      break;
+    case "badCommand":
+      throw evt.data.message;
+    default:
+      self.postMessage({
+        type: "badCommand",
+        message: "Unrecognized Command Type",
+      });
+  };
+});
+
+self.addEventListener("messageerror", function (evt) {
+});
+
+// SharedWorkerMessaging.mjs
+
+// ServiceWorkerMessaging.mjs
