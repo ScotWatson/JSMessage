@@ -30,7 +30,7 @@ async function start( [ ErrorLog ] ) {
     self.addEventListener("messageerror", mainMessageErrorHandler);
     self.postMessage("Hello");
     function mainMessageHandler(evt) {
-      switch (evt.data.type) {
+      switch (evt.data.cmd) {
         case "port":
           if (myPort === undefined) {
             myPort = evt.data.port;
