@@ -67,6 +67,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     newChannel.port1.addEventListener("messageerror", newMessageErrorHandler);
     btnSendToWorker.addEventListener(function () {
       newChannel.port1.postMessage("From Window to Worker");
+      console.log("From Window to Worker");
     });
     btnSendFromWorker.addEventListener(function () {
       myWorker.postMessage({
@@ -75,6 +76,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     });
     btnCloseWindowPort.addEventListener(function () {
       newChannel.port1.close();
+      console.log("Window Port Closed");
     });
     btnCloseWorkerPort.addEventListener(function () {
       myWorker.postMessage({
