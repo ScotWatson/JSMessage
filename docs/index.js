@@ -85,6 +85,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       console.log(evt);
       if (evt.data === "Hello") {
         const obj = {
+          cmd: "port",
           port: newChannel.port2,
         };
         newChannel.port1.start();
