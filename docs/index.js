@@ -229,9 +229,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
                 console.log("SendToParentWindow");
               });
               btnClosePortToParentWindow.addEventListener("click", function () {
-                parentWindowPort.postMessage({
-                  cmd: "close child to parent port",
-                });
+                parentWindowPort.close();
                 console.log("ClosePortToParentWindow");
               });
               break;
@@ -269,9 +267,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
                 console.log("SendToChildWindow");
               });
               btnClosePortToChildWindow.addEventListener("click", function () {
-                newWindowChannel.port1.postMessage({
-                  cmd: "close parent to child port",
-                });
+                newWindowChannel.port1.close();
                 console.log("ClosePortToChildWindow");
               });
               console.log("port sent to child window");
@@ -290,7 +286,6 @@ async function start( [ evtWindow, ErrorLog ] ) {
                 cmd: "Hello",
               }, thisOrigin);
               helloSent = true;
-              document.body.style.backgroundColor = "green";
             }
           }
         }
