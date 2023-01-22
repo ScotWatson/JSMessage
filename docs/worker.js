@@ -29,6 +29,9 @@ async function start( [ ErrorLog ] ) {
     self.addEventListener("message", mainMessageHandler);
     self.addEventListener("messageerror", mainMessageErrorHandler);
     self.postMessage("Hello");
+    setInterval(function () {
+      self.postMessage("tick");
+    }, 1000);
     function mainMessageHandler(evt) {
       switch (evt.data.cmd) {
         case "port":
@@ -59,7 +62,7 @@ async function start( [ ErrorLog ] ) {
       self.postMessage(evt);
     }
     function myMessageHandler(evt) {
-      myPort.postMessage("Received: " + evt.data);
+      self.postMessage("Received: " + evt.data);
     }
     function myMessageErrorHandler(evt) {
       self.postMessage("port message error");
