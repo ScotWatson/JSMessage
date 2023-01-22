@@ -111,7 +111,23 @@ async function start( [ evtWindow, ErrorLog ] ) {
       }, 500);
       evt.target.remove();
       function childWindowMessageHandler(evt) {
-        console.log(evt);
+        const logObj = {
+          data: evt.data,
+          source: (function () {
+            switch (evt.source) {
+              case self.window: {
+                return "This Window";
+              }
+              case childWindow: {
+                return "Child Window";
+              }
+              default: {
+                return "Unknown Window";
+              }
+            };
+          })(),
+        };
+        console.log(logObj);
         const childOrigin = evt.origin;
         const childWindow = evt.source;
         if (childOrigin !== otherOrigin) {
@@ -171,7 +187,23 @@ async function start( [ evtWindow, ErrorLog ] ) {
     let helloSent = false;
     
     function mainMessageHandler(evt) {
-      console.log(evt);
+      const logObj = {
+        data: evt.data,
+        source: (function () {
+          switch (evt.source) {
+            case self.window: {
+              return "This Window";
+            }
+            case parentWindow: {
+              return "Parent Window";
+            }
+            default: {
+              return "Unknown Window";
+            }
+          };
+        })(),
+      };
+      console.log(logObj);
       const thisOrigin = evt.origin;
       const thisWindow = evt.source;
       if (thisOrigin !== otherOrigin) {
