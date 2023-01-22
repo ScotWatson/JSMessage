@@ -176,6 +176,9 @@ async function start( [ evtWindow, ErrorLog ] ) {
             case parentWindow: {
               return "Parent Window";
             }
+            case childWindow: {
+              return "Child Window";
+            }
             default: {
               return "Unknown Window";
             }
@@ -220,11 +223,13 @@ async function start( [ evtWindow, ErrorLog ] ) {
                 parentWindow.postMessage({
                   cmd: "test from child",
                 });
+                console.log("SendToParentWindow");
               });
               btnClosePortToParentWindow.addEventListener("click", function () {
                 parentWindow.postMessage({
                   cmd: "close child to parent port",
                 });
+                console.log("ClosePortToParentWindow");
               });
               break;
             }
@@ -258,13 +263,14 @@ async function start( [ evtWindow, ErrorLog ] ) {
                 newWindowChannel.port1.postMessage({
                   cmd: "test from parent",
                 });
+                console.log("SendToChildWindow");
               });
               btnClosePortToChildWindow.addEventListener("click", function () {
                 newWindowChannel.port1.postMessage({
                   cmd: "close parent to child port",
                 });
+                console.log("ClosePortToChildWindow");
               });
-
               console.log("port sent to child window");
               break;
             }
