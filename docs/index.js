@@ -209,6 +209,8 @@ async function start( [ evtWindow, ErrorLog ] ) {
           switch (evt.data.cmd) {
             case "port": {
               parentWindowPort = evt.data.port;
+              parentWindowPort.addEventListener("message", newWindowMessageHandler);
+              parentWindowPort.addEventListener("messageerror", newWindowMessageErrorHandler);
               parentWindowPort.start();
 
               const btnSendToParentWindow = document.createElement("button");
