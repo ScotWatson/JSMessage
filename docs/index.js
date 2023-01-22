@@ -127,6 +127,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
               }
             };
           })(),
+          origin: evt.origin,
         };
         console.log(logObj);
         const thisOrigin = evt.origin;
