@@ -110,6 +110,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
         }, otherOrigin);
       }, 500);
       evt.target.remove();
+      // Sees both parent sent and child sent messages
       function childWindowMessageHandler(evt) {
         const logObj = {
           data: evt.data,
@@ -128,11 +129,13 @@ async function start( [ evtWindow, ErrorLog ] ) {
           })(),
         };
         console.log(logObj);
-        const childOrigin = evt.origin;
-        const childWindow = evt.source;
-        if (childOrigin !== otherOrigin) {
+        const thisOrigin = evt.origin;
+        const thisWindow = evt.source;
+        if (thisOrigin !== otherOrigin) {
           throw "Bad Origin: " + childOrigin;
         }
+        console.log(evt.data.cmd);
+        console.log(evt.data.cmd === "Hello");
         switch (evt.data.cmd) {
           case "Hello": {
             document.body.style.backgroundColor = "green";
@@ -142,7 +145,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
               port: newWindowChannel.port2,
             };
             newWindowChannel.port1.start();
-            childWindow.postMessage(obj, otherOrigin, [ newWindowChannel.port2 ] );
+            thisWindow.postMessage(obj, otherOrigin, [ newWindowChannel.port2 ] );
 
             const btnSendToChildWindow = document.createElement("button");
             btnSendToChildWindow.appendChild(document.createTextNode("Send to Child Window"));
