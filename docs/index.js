@@ -94,23 +94,21 @@ async function start( [ evtWindow, ErrorLog ] ) {
       });
     });
     
+    let childWindow = null;
+    let intervalHandle;
+    
     btnOpenChildWindow.addEventListener("click", function (evt) {
-
-      const childWindow = self.window.open(otherOrigin + "/JSMessage/index.html");
+      childWindow = self.window.open(otherOrigin + "/JSMessage/index.html");
       childWindow.addEventListener("message", childWindowMessageHandler);
       childWindow.addEventListener("messageerror", childWindowMessageErrorHandler);
-
-      const newWindowChannel = new MessageChannel();
-      newWindowChannel.port1.addEventListener("message", newWindowMessageHandler);
-      newWindowChannel.port1.addEventListener("messageerror", newWindowMessageErrorHandler);
-
-      const intervalHandle = self.setInterval(function () {
+      intervalHandle = self.setInterval(function () {
         childWindow.postMessage({
           cmd: "Start",
         }, otherOrigin);
       }, 500);
       evt.target.remove();
-      // Sees both parent sent and child sent messages
+      // In parent, sees parent sent messages
+      // Does not exist in child
       function childWindowMessageHandler(evt) {
         const logObj = {
           data: evt.data,
@@ -144,54 +142,8 @@ async function start( [ evtWindow, ErrorLog ] ) {
         if (thisOrigin !== otherOrigin) {
           throw "Bad Origin: " + childOrigin;
         }
-        console.log(evt.data.cmd);
-        console.log(evt.data.cmd === "Hello");
-        switch (evt.data.cmd) {
-          case "Hello": {
-            document.body.style.backgroundColor = "green";
-            self.clearInterval(intervalHandle);
-            const obj = {
-              cmd: "port",
-              port: newWindowChannel.port2,
-            };
-            newWindowChannel.port1.start();
-            thisWindow.postMessage(obj, otherOrigin, [ newWindowChannel.port2 ] );
-
-            const btnSendToChildWindow = document.createElement("button");
-            btnSendToChildWindow.appendChild(document.createTextNode("Send to Child Window"));
-            document.body.appendChild(btnSendToChildWindow);
-            document.body.appendChild(document.createElement("br"));
-            const btnClosePortToChildWindow = document.createElement("button");
-            btnClosePortToChildWindow.appendChild(document.createTextNode("Close Port To Child Window"));
-            document.body.appendChild(btnClosePortToChildWindow);
-            document.body.appendChild(document.createElement("br"));
-
-            btnSendToChildWindow.addEventListener("click", function () {
-              newWindowChannel.port1.postMessage({
-                cmd: "test from parent",
-              });
-            });
-            btnClosePortToChildWindow.addEventListener("click", function () {
-              newWindowChannel.port1.postMessage({
-                cmd: "close parent to child port",
-              });
-            });
-
-            console.log("port sent to child window");
-            break;
-          }
-          default: {
-            break;
-          }
-        };
       }
       function childWindowMessageErrorHandler(evt) {
-        console.error(evt);
-      }
-      function newWindowMessageHandler(evt) {
-        console.log(evt);
-      }
-      function newWindowMessageErrorHandler(evt) {
         console.error(evt);
       }
     });
@@ -200,6 +152,19 @@ async function start( [ evtWindow, ErrorLog ] ) {
     let parentWindowPort;
     let helloSent = false;
     
+    const newWindowChannel = new MessageChannel();
+    newWindowChannel.port1.addEventListener("message", newWindowMessageHandler);
+    newWindowChannel.port1.addEventListener("messageerror", newWindowMessageErrorHandler);
+
+    function newWindowMessageHandler(evt) {
+      console.log(evt);
+    }
+    function newWindowMessageErrorHandler(evt) {
+      console.error(evt);
+    }
+
+    // In parent, sees child sent messages
+    // In child, sees parent sent messages
     function mainMessageHandler(evt) {
       const logObj = {
         data: evt.data,
@@ -216,6 +181,16 @@ async function start( [ evtWindow, ErrorLog ] ) {
             }
           };
         })(),
+        origin: (function () {
+          if (!("origin" in evt)) {
+            return "does not exist";
+          }
+          if (evt.origin === undefined) {
+            return "undefined";
+          } else {
+            return evt.origin;
+          }
+        })(),
       };
       console.log(logObj);
       const thisOrigin = evt.origin;
@@ -223,44 +198,92 @@ async function start( [ evtWindow, ErrorLog ] ) {
       if (thisOrigin !== otherOrigin) {
         throw "Bad Origin: " + thisOrigin;
       }
-      switch (evt.data.cmd) {
-        case "Start": {
-          if (!helloSent) {
-            parentWindow = thisWindow;
-            thisWindow.postMessage({
-              cmd: "Hello",
-            }, thisOrigin);
-            helloSent = true;
-            document.body.style.backgroundColor = "green";
-          }
-          break;
+      switch (evt.source) {
+        case self.window: {
+          console.log("I see myself!");
         }
-        case "port": {
-          parentWindowPort = evt.data.port;
-          
-          const btnSendToParentWindow = document.createElement("button");
-          btnSendToParentWindow.appendChild(document.createTextNode("Send to Parent Window"));
-          document.body.appendChild(btnSendToParentWindow);
-          document.body.appendChild(document.createElement("br"));
-          const btnClosePortToParentWindow = document.createElement("button");
-          btnClosePortToParentWindow.appendChild(document.createTextNode("Close Port To Parent Window"));
-          document.body.appendChild(btnClosePortToParentWindow);
-          document.body.appendChild(document.createElement("br"));
+        case parentWindow: {
+          switch (evt.data.cmd) {
+            case "port": {
+              parentWindowPort = evt.data.port;
 
-          btnSendToParentWindow.addEventListener("click", function () {
-            parentWindow.postMessage({
-              cmd: "test from child",
-            });
-          });
-          btnClosePortToParentWindow.addEventListener("click", function () {
-            parentWindow.postMessage({
-              cmd: "close child to parent port",
-            });
-          });
-          break;
+              const btnSendToParentWindow = document.createElement("button");
+              btnSendToParentWindow.appendChild(document.createTextNode("Send to Parent Window"));
+              document.body.appendChild(btnSendToParentWindow);
+              document.body.appendChild(document.createElement("br"));
+              const btnClosePortToParentWindow = document.createElement("button");
+              btnClosePortToParentWindow.appendChild(document.createTextNode("Close Port To Parent Window"));
+              document.body.appendChild(btnClosePortToParentWindow);
+              document.body.appendChild(document.createElement("br"));
+
+              btnSendToParentWindow.addEventListener("click", function () {
+                parentWindow.postMessage({
+                  cmd: "test from child",
+                });
+              });
+              btnClosePortToParentWindow.addEventListener("click", function () {
+                parentWindow.postMessage({
+                  cmd: "close child to parent port",
+                });
+              });
+              break;
+            }
+            default: {
+              break;
+            }
+          };
         }
-        default: {
-          break;
+        case childWindow: {
+          switch (evt.data.cmd) {
+            case "Hello": {
+              document.body.style.backgroundColor = "green";
+              self.clearInterval(intervalHandle);
+              const obj = {
+                cmd: "port",
+                port: newWindowChannel.port2,
+              };
+              newWindowChannel.port1.start();
+              thisWindow.postMessage(obj, otherOrigin, [ newWindowChannel.port2 ] );
+
+              const btnSendToChildWindow = document.createElement("button");
+              btnSendToChildWindow.appendChild(document.createTextNode("Send to Child Window"));
+              document.body.appendChild(btnSendToChildWindow);
+              document.body.appendChild(document.createElement("br"));
+              const btnClosePortToChildWindow = document.createElement("button");
+              btnClosePortToChildWindow.appendChild(document.createTextNode("Close Port To Child Window"));
+              document.body.appendChild(btnClosePortToChildWindow);
+              document.body.appendChild(document.createElement("br"));
+
+              btnSendToChildWindow.addEventListener("click", function () {
+                newWindowChannel.port1.postMessage({
+                  cmd: "test from parent",
+                });
+              });
+              btnClosePortToChildWindow.addEventListener("click", function () {
+                newWindowChannel.port1.postMessage({
+                  cmd: "close parent to child port",
+                });
+              });
+
+              console.log("port sent to child window");
+              break;
+            }
+            default: {
+              break;
+            }
+          };
+        }
+        default: { // Unknown Window, becomes the parent
+          if (evt.data.cmd === "Start") {
+            if (!helloSent) {
+              parentWindow = thisWindow;
+              thisWindow.postMessage({
+                cmd: "Hello",
+              }, thisOrigin);
+              helloSent = true;
+              document.body.style.backgroundColor = "green";
+            }
+          }
         }
       };
     }
