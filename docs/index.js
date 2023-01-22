@@ -135,6 +135,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
         }
         switch (evt.data.cmd) {
           case "Hello": {
+            document.body.style.backgroundColor = "green";
             self.clearInterval(intervalHandle);
             const obj = {
               cmd: "port",
