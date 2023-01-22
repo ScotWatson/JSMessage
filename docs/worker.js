@@ -30,35 +30,35 @@ async function start( [ ErrorLog ] ) {
     self.addEventListener("messageerror", mainMessageErrorHandler);
     self.postMessage("Hello");
     function mainMessageHandler(evt) {
-      self.postMessage("echo");
-      if ("port" in evt.data) {
-        if (myPort === undefined) {
-          myPort = evt.data.port;
-          myPort.addEventListener("message", myMessageHandler);
-          myPort.addEventListener("messageerror", myMessageErrorHandler);
-          self.postMessage("connected");
-          myPort.start();
-          myPort.postMessage("data");
-          setTimeout(function () {
-            myPort.close();
-          }, 1000);
-          setTimeout(function () {
+      switch (evt.data.type) {
+        case "port":
+          if (myPort === undefined) {
+            myPort = evt.data.port;
+            myPort.addEventListener("message", myMessageHandler);
+            myPort.addEventListener("messageerror", myMessageErrorHandler);
             myPort.start();
-          }, 2000);
-          setTimeout(function () {
-            myPort.close();
-          }, 3000);
-        } else {
-          // Close and discard received port
-          evt.data.port.close();
-        }
+          } else {
+            // Close and discard received port
+            evt.data.port.close();
+          }
+          break;
+        case "send":
+          myPort.postMessage("From Worker to Window");
+          break;
+        case "close":
+          myPort.close();
+          break;
+        default:
+          break;
+      };
+      if ("port" in evt.data) {
       }
     }
     function mainMessageErrorHandler(evt) {
       self.postMessage(evt);
     }
     function myMessageHandler(evt) {
-      myPort.postMessage(evt.data + "-data");
+      myPort.postMessage("Received: " + evt.data);
     }
     function myMessageErrorHandler(evt) {
       self.postMessage("port message error");
