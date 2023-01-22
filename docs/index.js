@@ -220,13 +220,13 @@ async function start( [ evtWindow, ErrorLog ] ) {
               document.body.appendChild(document.createElement("br"));
 
               btnSendToParentWindow.addEventListener("click", function () {
-                parentWindow.postMessage({
+                parentWindowPort.postMessage({
                   cmd: "test from child",
                 });
                 console.log("SendToParentWindow");
               });
               btnClosePortToParentWindow.addEventListener("click", function () {
-                parentWindow.postMessage({
+                parentWindowPort.postMessage({
                   cmd: "close child to parent port",
                 });
                 console.log("ClosePortToParentWindow");
