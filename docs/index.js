@@ -38,12 +38,49 @@ async function start( [ evtWindow, ErrorLog ] ) {
     imgBird.style.width = "200px";
     document.body.appendChild(imgBird);
     document.body.appendChild(document.createElement("br"));
+
+    const btnSendToWorker = document.createElement("button");
+    btnSendToWorker.appendChild(document.createTextNode("Send to Worker"));
+    document.body.appendChild(btnSendToWorker);
+    document.body.appendChild(document.createElement("br"));
+    
+    const btnSendFromWorker = document.createElement("button");
+    btnSendFromWorker.appendChild(document.createTextNode("Send from Worker"));
+    document.body.appendChild(btnSendFromWorker);
+    document.body.appendChild(document.createElement("br"));
+    
+    const btnCloseWindowPort = document.createElement("button");
+    btnCloseWindowPort.appendChild(document.createTextNode("Close Window Side Port"));
+    document.body.appendChild(btnCloseWindowPort);
+    document.body.appendChild(document.createElement("br"));
+    
+    const btnCloseWorkerPort = document.createElement("button");
+    btnCloseWorkerPort.appendChild(document.createTextNode("Close Worker Side Port"));
+    document.body.appendChild(btnCloseWorkerPort);
+    document.body.appendChild(document.createElement("br"));
+    
     const myWorker = new Worker("worker.js");
     myWorker.addEventListener("message", mainMessageHandler);
     myWorker.addEventListener("messageerror", mainMessageErrorHandler);
     const newChannel = new MessageChannel();
     newChannel.port1.addEventListener("message", newMessageHandler);
     newChannel.port1.addEventListener("messageerror", newMessageErrorHandler);
+    btnSendToWorker.addEventListener(function () {
+      newChannel.port1.postMessage("From Window to Worker");
+    });
+    btnSendFromWorker.addEventListener(function () {
+      myWorker.postMessage({
+        cmd: "send",
+      });
+    });
+    btnCloseWindowPort.addEventListener(function () {
+      newChannel.port1.close();
+    });
+    btnCloseWorkerPort.addEventListener(function () {
+      myWorker.postMessage({
+        cmd: "close",
+      });
+    });
     function mainMessageHandler(evt) {
       console.log(evt);
       if (evt.data === "Hello") {
@@ -60,12 +97,6 @@ async function start( [ evtWindow, ErrorLog ] ) {
     }
     function newMessageHandler(evt) {
       console.log(evt);
-      if (evt.data === "data") {
-        newChannel.port1.postMessage("response");
-        setInterval(function () {
-          newChannel.port1.postMessage("test");
-        }, 100);
-      }
     }
     function newMessageErrorHandler(evt) {
       console.error(evt);
