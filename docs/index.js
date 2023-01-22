@@ -217,6 +217,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
               cmd: "Hello",
             }, thisOrigin);
             helloSent = true;
+            document.body.style.backgroundColor = "green";
           }
           break;
         }
