@@ -165,6 +165,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
 
     let parentWindow;
     let parentWindowPort;
+    let helloSent = false;
     
     function mainMessageHandler(evt) {
       console.log(evt);
@@ -175,9 +176,12 @@ async function start( [ evtWindow, ErrorLog ] ) {
       }
       switch (evt.data.cmd) {
         case "Start": {
-          thisWindow.postMessage({
-            cmd: "Hello",
-          });
+          if (!helloSent) {
+            thisWindow.postMessage({
+              cmd: "Hello",
+            });
+            helloSent = true;
+          }
           break;
         }
         case "port": {
