@@ -37,6 +37,7 @@ async function start( [ ErrorLog ] ) {
             myPort.addEventListener("message", myMessageHandler);
             myPort.addEventListener("messageerror", myMessageErrorHandler);
             myPort.start();
+            self.postMessage("port received");
           } else {
             // Close and discard received port
             evt.data.port.close();
