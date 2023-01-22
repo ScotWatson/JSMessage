@@ -212,6 +212,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       switch (evt.data.cmd) {
         case "Start": {
           if (!helloSent) {
+            parentWindow = thisWindow;
             thisWindow.postMessage({
               cmd: "Hello",
             });
@@ -220,7 +221,6 @@ async function start( [ evtWindow, ErrorLog ] ) {
           break;
         }
         case "port": {
-          parentWindow = thisWindow;
           parentWindowPort = evt.data.port;
           
           const btnSendToParentWindow = document.createElement("button");
