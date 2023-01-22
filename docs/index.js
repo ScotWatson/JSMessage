@@ -127,7 +127,16 @@ async function start( [ evtWindow, ErrorLog ] ) {
               }
             };
           })(),
-          origin: evt.origin,
+          origin: (function () {
+            if (!("origin" in evt)) {
+              return "does not exist";
+            }
+            if (evt.origin === undefined) {
+              return "undefined";
+            } else {
+              return evt.origin;
+            }
+          })(),
         };
         console.log(logObj);
         const thisOrigin = evt.origin;
