@@ -65,20 +65,20 @@ async function start( [ evtWindow, ErrorLog ] ) {
     const newChannel = new MessageChannel();
     newChannel.port1.addEventListener("message", newMessageHandler);
     newChannel.port1.addEventListener("messageerror", newMessageErrorHandler);
-    btnSendToWorker.addEventListener(function () {
+    btnSendToWorker.addEventListener("click", function () {
       newChannel.port1.postMessage("From Window to Worker");
       console.log("From Window to Worker");
     });
-    btnSendFromWorker.addEventListener(function () {
+    btnSendFromWorker.addEventListener("click", function () {
       myWorker.postMessage({
         cmd: "send",
       });
     });
-    btnCloseWindowPort.addEventListener(function () {
+    btnCloseWindowPort.addEventListener("click", function () {
       newChannel.port1.close();
       console.log("Window Port Closed");
     });
-    btnCloseWorkerPort.addEventListener(function () {
+    btnCloseWorkerPort.addEventListener("click", function () {
       myWorker.postMessage({
         cmd: "close",
       });
