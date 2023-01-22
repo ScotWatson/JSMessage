@@ -93,29 +93,56 @@ class MessageChannelNode {
 
 // WindowMessaging.mjs
 
-self.addEventListener("message", function (evt) {
-  if (!(Types.isSimpleObject(evt.data))) {
-    throw "data must be a simple object.";
+class ChannelManager {
+  constructor() {
   }
-  switch (evt.data.type) {
-    case "openChannel":
-      evt.data.name
-      break;
-    case "transferPort":
-      evt.data.name
-      evt.data.port
-      break;
-    case "requestChannel":
-      break;
-    case "badCommand":
-      evt.data
-      break;
-    default:
-      self.postMessage({
-        type: "badCommand",
-        message: "Unrecognized Command Type",
-      });
-  };
+  openChannel() {
+    const channel = new MessageChannel();
+    self.postMessage({
+      type: "openChannel",
+      port: channel.port2,
+    }, origin, [ channel.port2 ]);
+  }
+  allowChannel() {
+  }
+}
+
+self.addEventListener("message", function (evt) {
+  try {
+    const origin = evt.origin;
+    if (!(Types.isSimpleObject(evt.data))) {
+      throw "data must be a simple object.";
+    }
+    switch (evt.data.type) {
+      case "badCommand": {
+        throw evt.data.message;
+      }
+      case "openChannel": {
+        const name = evt.data.name;
+        const port = evt.data.port;
+        ports.set(name, port);
+        break;
+      }
+      case "ping": {
+        const channel = evt.data.channel;
+        self.postMessage({
+          type: "echo",
+        });
+        break;
+      }
+      case "echo": {
+        stillAlive(origin);
+        break;
+      }
+      default: {
+        self.postMessage({
+          type: "badCommand",
+          message: "Unrecognized Command Type",
+        });
+      }
+    };
+  } catch (e) {
+  }
 });
 
 self.addEventListener("messageerror", function (evt) {
