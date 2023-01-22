@@ -73,7 +73,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     newChannel.port1.addEventListener("message", newWorkerMessageHandler);
     newChannel.port1.addEventListener("messageerror", newWorkerMessageErrorHandler);
 
-    const otherOrigin = "https://scotwatson.github.io/";
+    const otherOrigin = "https://scotwatson.github.io";
 
     btnSendToWorker.addEventListener("click", function () {
       newChannel.port1.postMessage("From Window to Worker");
@@ -104,18 +104,18 @@ async function start( [ evtWindow, ErrorLog ] ) {
       document.body.appendChild(btnClosePortToChildWindow);
       document.body.appendChild(document.createElement("br"));
 
-      const childWindow = self.window.open(otherOrigin + "JSMessage/index.html");
+      const childWindow = self.window.open(otherOrigin + "/JSMessage/index.html");
       childWindow.addEventListener("message", childWindowMessageHandler);
       childWindow.addEventListener("messageerror", childWindowMessageErrorHandler);
 
       btnSendToChildWindow.addEventListener("click", function () {
         childWindow.postMessage({
-          cmd: "test",
+          cmd: "test from parent",
         });
       });
       btnClosePortToChildWindow.addEventListener("click", function () {
         childWindow.postMessage({
-          cmd: "close",
+          cmd: "close parent to child port",
         });
       });
 
@@ -163,6 +163,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       }
     });
 
+    let parentWindow;
     let parentWindowPort;
     
     function mainMessageHandler(evt) {
@@ -177,9 +178,31 @@ async function start( [ evtWindow, ErrorLog ] ) {
           thisWindow.postMessage({
             cmd: "Hello",
           });
+          break;
         }
         case "port": {
+          parentWindow = thisWindow;
           parentWindowPort = evt.data.port;
+          
+          const btnSendToParentWindow = document.createElement("button");
+          btnSendToParentWindow.appendChild(document.createTextNode("Send to Parent Window"));
+          document.body.appendChild(btnSendToParentWindow);
+          document.body.appendChild(document.createElement("br"));
+          const btnClosePortToParentWindow = document.createElement("button");
+          btnClosePortToParentWindow.appendChild(document.createTextNode("Close Port To Parent Window"));
+          document.body.appendChild(btnClosePortToParentWindow);
+          document.body.appendChild(document.createElement("br"));
+
+          btnSendToParentWindow.addEventListener("click", function () {
+            parentWindow.postMessage({
+              cmd: "test from child",
+            });
+          });
+          btnClosePortToParentWindow.addEventListener("click", function () {
+            parentWindow.postMessage({
+              cmd: "close child to parent port",
+            });
+          });
           break;
         }
         default: {
