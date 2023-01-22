@@ -132,8 +132,8 @@ async function start( [ evtWindow, ErrorLog ] ) {
         console.log(evt);
         const childOrigin = evt.origin;
         const childWindow = evt.source;
-        if (thisOrigin !== otherOrigin) {
-          throw "Bad Origin: " + thisOrigin;
+        if (childOrigin !== otherOrigin) {
+          throw "Bad Origin: " + childOrigin;
         }
         switch (evt.data.cmd) {
           case "Hello": {
