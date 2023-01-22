@@ -215,7 +215,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
             parentWindow = thisWindow;
             thisWindow.postMessage({
               cmd: "Hello",
-            });
+            }, thisOrigin);
             helloSent = true;
           }
           break;
