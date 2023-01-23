@@ -98,7 +98,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     let intervalHandle;
     
     btnOpenChildWindow.addEventListener("click", function (evt) {
-      childWindow = self.window.open(otherOrigin + "/JSMessage/index.html");
+      childWindow = self.window.open(otherOrigin + "/JSMessage/20230122/index.html");
       childWindow.addEventListener("message", childWindowMessageHandler);
       childWindow.addEventListener("messageerror", childWindowMessageErrorHandler);
       intervalHandle = self.setInterval(function () {
