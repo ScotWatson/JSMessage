@@ -31,6 +31,9 @@ const asyncErrorLog = (async function () {
   }
 })();
 
+const childWindows = new Set();
+const parentWindows = new Set();
+
 async function start( [ evtWindow, ErrorLog ] ) {
   try {
     const imgBird = document.createElement("img");
@@ -39,25 +42,111 @@ async function start( [ evtWindow, ErrorLog ] ) {
     document.body.appendChild(imgBird);
     document.body.appendChild(document.createElement("br"));
 
-    const btnSendToWorker = document.createElement("button");
-    btnSendToWorker.appendChild(document.createTextNode("Send to Worker"));
-    document.body.appendChild(btnSendToWorker);
+    const btnCreateWorker = document.createElement("button");
+    btnCreateWorker.appendChild(document.createTextNode("Create Worker"));
+    document.body.appendChild(btnCreateWorker);
     document.body.appendChild(document.createElement("br"));
     
-    const btnSendFromWorker = document.createElement("button");
-    btnSendFromWorker.appendChild(document.createTextNode("Send from Worker"));
-    document.body.appendChild(btnSendFromWorker);
-    document.body.appendChild(document.createElement("br"));
+    const divWorkers = document.createElement("div");
+    document.body.appendChild(divWorkers);
+
+    btnCreateWorker.addEventListener("click", function () {
+      const divWorker = document.createElement("div");
+      divWorkers.appendChild(divWorker);
+      const thisWorker = new Worker("worker.js");
+      thisWorker.addEventListener("message", thisWorkerMessageHandler);
+      thisWorker.addEventListener("messageerror", thisWorkerMessageErrorHandler);
+      function createChannel(name) {
+        const thisChannel = new self.MessageChannel();
+        thisWorkerChannels.set(name, thisChannel);
+        thisWorker.postMessage({
+          type: "open",
+          name: name,
+          port: thisChannel.port2,
+        }, [ thisChannel.port2 ]);
+        return thisChannel.port1;
+      }
+      const btnCreateChannel = document.createElement("button");
+      btnCreateChannel.appendChild(document.createTextNode("Create Channel"));
+      divWorker.appendChild(btnCreateChannel);
+
+      const divChannels = document.createElement("div");
+      divWorker.appendChild(divChannels);
+
+      btnCreateChannel.addEventListener("click", function () {
+        const divChannel = document.createElement("div");
+        divChannels.appendChild(divChannel);
+        const channelName = self.prompt("Enter the new channel name:");
+        const port = createChannel(channelName);
+        const btnSendToWorker = document.createElement("button");
+        btnSendToWorker.altText = "Send to Worker";
+        const imgSendToWorker = document.createElement("img");
+        imgSendToWorker.src = "Send.bmp";
+        btnSendToWorker.appendChild(imgSendToWorker);
+        divChannel.appendChild(btnSendToWorker);
+        const btnCloseWorkerPort = document.createElement("button");
+        btnCloseWorkerPort.altText = "Close Worker Side Port";
+        const imgCloseWorkerPort = document.createElement("img");
+        imgCloseWorkerPort.src = "CloseWorkerChannel.bmp";
+        btnCloseWorkerPort.appendChild(imgCloseWorkerPort);
+        divChannel.appendChild(btnCloseWorkerPort);
+        btnSendToWorker.addEventListener("click", function () {
+          port.postMessage("From Window to Worker");
+          console.log("From Window to Worker");
+        });
+        btnCloseWorkerPort.addEventListener("click", function () {
+          port.close();
+          thisWorker.postMessage({
+            type: "close",
+            name: channelName,
+          });
+          divChannel.remove();
+        });
+      });
+
+      let alive = false;
+      function ping() {
+        alive = false;
+        thisWorker.postMessage({
+          type: "ping",
+        });
+      }
+
+      function thisWorkerMessageHandler(evt) {
+        alive = true;
+        if (!("type" in evt.data)) {
+          thisWorker.postMessage({
+            type: "error",
+            message: "type must be provided",
+            data: evt.data,
+          });
+        }
+        switch (evt.data.type) {
+          case "echo": {
+          }
+            const obj = {
+              cmd: "port",
+              port: newChannel.port2,
+            };
+            newChannel.port1.start();
+            thisWorker.postMessage(obj, [ newChannel.port2 ] );
+            break;
+          }
+          default: {
+          }
+        }
+      }
+      function thisWorkerMessageErrorHandler(evt) {
+        console.error(evt);
+      }
+      function newWorkerMessageHandler(evt) {
+        console.log(evt);
+      }
+      function newWorkerMessageErrorHandler(evt) {
+        console.error(evt);
+      }
+    });
     
-    const btnCloseWindowPort = document.createElement("button");
-    btnCloseWindowPort.appendChild(document.createTextNode("Close Window Side Port"));
-    document.body.appendChild(btnCloseWindowPort);
-    document.body.appendChild(document.createElement("br"));
-    
-    const btnCloseWorkerPort = document.createElement("button");
-    btnCloseWorkerPort.appendChild(document.createTextNode("Close Worker Side Port"));
-    document.body.appendChild(btnCloseWorkerPort);
-    document.body.appendChild(document.createElement("br"));
     
     const btnOpenChildWindow = document.createElement("button");
     btnOpenChildWindow.appendChild(document.createTextNode("Open Child Window"));
@@ -66,34 +155,13 @@ async function start( [ evtWindow, ErrorLog ] ) {
 
     self.addEventListener("message", mainMessageHandler);
     self.addEventListener("messageerror", mainMessageErrorHandler);
-    const myWorker = new Worker("worker.js");
-    myWorker.addEventListener("message", mainWorkerMessageHandler);
-    myWorker.addEventListener("messageerror", mainWorkerMessageErrorHandler);
+
     const newChannel = new MessageChannel();
     newChannel.port1.addEventListener("message", newWorkerMessageHandler);
     newChannel.port1.addEventListener("messageerror", newWorkerMessageErrorHandler);
 
     const otherOrigin = "https://scotwatson.github.io";
 
-    btnSendToWorker.addEventListener("click", function () {
-      newChannel.port1.postMessage("From Window to Worker");
-      console.log("From Window to Worker");
-    });
-    btnSendFromWorker.addEventListener("click", function () {
-      myWorker.postMessage({
-        cmd: "send",
-      });
-    });
-    btnCloseWindowPort.addEventListener("click", function () {
-      newChannel.port1.close();
-      console.log("Window Port Closed");
-    });
-    btnCloseWorkerPort.addEventListener("click", function () {
-      myWorker.postMessage({
-        cmd: "close",
-      });
-    });
-    
     let childWindow = null;
     let intervalHandle;
     
@@ -292,27 +360,6 @@ async function start( [ evtWindow, ErrorLog ] ) {
       };
     }
     function mainMessageErrorHandler(evt) {
-      console.error(evt);
-    }
-    function mainWorkerMessageHandler(evt) {
-      console.log(evt);
-      if (evt.data === "Hello") {
-        const obj = {
-          cmd: "port",
-          port: newChannel.port2,
-        };
-        newChannel.port1.start();
-        myWorker.postMessage(obj, [ newChannel.port2 ] );
-        console.log("port sent to worker");
-      }
-    }
-    function mainWorkerMessageErrorHandler(evt) {
-      console.error(evt);
-    }
-    function newWorkerMessageHandler(evt) {
-      console.log(evt);
-    }
-    function newWorkerMessageErrorHandler(evt) {
       console.error(evt);
     }
   } catch (e) {
