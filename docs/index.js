@@ -150,6 +150,14 @@ async function start( [ evtWindow, ErrorLog ] ) {
       btnViewWorkerLog.addEventListener("click", function () {
         showLog(thisWorkerLog);
       });
+      const btnPingWorker = document.createElement("button");
+      btnPingWorker.alt = "Ping Worker";
+      const imgPingWorker = document.createElement("img");
+      imgPingWorker.src = "";
+      imgPingWorker.style.width = "50px";
+      imgPingWorker.style.height = "50px";
+      btnPingWorker.appendChild(imgPingWorker);
+      divWorker.appendChild(btnPingWorker);
       const btnCreateChannel = document.createElement("button");
       btnCreateChannel.alt = "Create Channel";
       const imgCreateChannel = document.createElement("img");
@@ -160,6 +168,12 @@ async function start( [ evtWindow, ErrorLog ] ) {
       divWorker.appendChild(btnCreateChannel);
       const divChannels = document.createElement("div");
       divWorker.appendChild(divChannels);
+      btnPingWorker.addEventListener("click", function () {
+        addEntry(thisWorkerLog, "Ping");
+        thisWorker.postMessage({
+          type: "ping sent",
+        });
+      });
       btnCreateChannel.addEventListener("click", function () {
         const thisChannelLog = createLog();
         const divChannel = document.createElement("div");
