@@ -63,10 +63,10 @@ async function start( [ ErrorLog ] ) {
       port.addEventListener("messageerror", myMessageErrorHandler);
       port.start();
       function myMessageHandler(evt) {
-        self.postMessage("Received: " + evt.data);
+        port.postMessage("Received: " + evt.data);
       }
       function myMessageErrorHandler(evt) {
-        self.postMessage("port message error");
+        port.postMessage("port message error");
       }
     }
   } catch (e) {
