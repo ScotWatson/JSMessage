@@ -219,13 +219,19 @@ async function start( [ evtWindow, ErrorLog ] ) {
         switch (evt.data.type) {
           case "echo": {
             // This is the standard response to ping. It is also sent when the worker is ready to processes messages.
+            addEntry(thisWorkerLog, "Echo received");
             break;
           }
           case "error": {
             // Process error
+            addEntry(thisWorkerLog, "Error received");
             break;
           }
           default: {
+            thisWorker.postMessage({
+              type: "error",
+              message: "Unknown Type: " + evt.data.type,
+            });
             break;
           }
         }
