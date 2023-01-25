@@ -169,9 +169,9 @@ async function start( [ evtWindow, ErrorLog ] ) {
       const divChannels = document.createElement("div");
       divWorker.appendChild(divChannels);
       btnPingWorker.addEventListener("click", function () {
-        addEntry(thisWorkerLog, "Ping");
+        addEntry(thisWorkerLog, "Ping sent");
         thisWorker.postMessage({
-          type: "ping sent",
+          type: "ping",
         });
       });
       btnCreateChannel.addEventListener("click", function () {
