@@ -37,7 +37,7 @@ async function start( [ ErrorLog ] ) {
           });
           break;
         }
-        case "port": {
+        case "open": {
           const port = evt.data.port;
           const name = evt.data.name;
           addPort(name, port);
@@ -50,6 +50,10 @@ async function start( [ ErrorLog ] ) {
           break;
         }
         default: {
+          self.postMessage({
+            type: "error",
+            message: "Unknown Type: " + evt.data.type,
+          });
           break;
         }
       };
