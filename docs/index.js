@@ -237,6 +237,10 @@ async function start( [ evtWindow, ErrorLog ] ) {
             addEntry(thisWorkerLog, "Echo received");
             break;
           }
+          case "info": {
+            addEntry(thisWorkerLog, "Info: " + evt.data.message);
+            break;
+          }
           case "error": {
             // Process error
             addEntry(thisWorkerLog, "Error received");
