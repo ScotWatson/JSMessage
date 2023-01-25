@@ -219,10 +219,14 @@ async function start( [ evtWindow, ErrorLog ] ) {
         switch (evt.data.type) {
           case "echo": {
             // This is the standard response to ping. It is also sent when the worker is ready to processes messages.
+            break;
           }
-          case "reply": {
+          case "error": {
+            // Process error
+            break;
           }
           default: {
+            break;
           }
         }
       }
@@ -452,6 +456,10 @@ async function start( [ evtWindow, ErrorLog ] ) {
               port.close();
               addEntry(parentWindowLog, "ClosePortToParentWindow");
             });
+            break;
+          }
+          case "error": {
+            // Process Error
             break;
           }
           default: {
