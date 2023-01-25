@@ -196,7 +196,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
         divChannel.appendChild(btnCloseWorkerPort);
         btnSendToWorker.addEventListener("click", function () {
           port.postMessage("From Window to Worker");
-          addEntry(thisWorkerLog, "From Window to Worker");
+          addEntry(thisChannelLog, "Send: From Window to Worker");
         });
         btnCloseWorkerPort.addEventListener("click", function () {
           addEntry(thisWorkerLog, "Close channel: " + channelName);
