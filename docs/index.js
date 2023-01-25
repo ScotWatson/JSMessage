@@ -135,6 +135,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
           name: name,
           port: thisChannel.port2,
         }, [ thisChannel.port2 ]);
+        thisChannel.port1.start();
         return thisChannel.port1;
       }
       divWorker.appendChild(document.createTextNode("Worker"));
