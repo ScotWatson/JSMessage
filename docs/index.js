@@ -66,8 +66,8 @@ async function start( [ evtWindow, ErrorLog ] ) {
       divLog.remove();
     }
     // Layout
-    body.style.width = "100%";
-    body.style.height = window.innerHeight + "px";
+    document.body.style.width = "100%";
+    document.body.style.height = window.innerHeight + "px";
     const btnCreateWorker = document.createElement("button");
     btnCreateWorker.alt = "Create Worker";
     btnCreateWorker.style.position = "absolute";
