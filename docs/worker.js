@@ -23,47 +23,51 @@ const asyncErrorLog = (async function () {
   }
 })();
 
+const ports = new Map();
+
 async function start( [ ErrorLog ] ) {
   try {
-    let myPort;
     self.addEventListener("message", mainMessageHandler);
     self.addEventListener("messageerror", mainMessageErrorHandler);
-    self.postMessage("Hello");
-    self.setInterval(function () {
-      self.postMessage("tick");
-    }, 5000);
     function mainMessageHandler(evt) {
-      switch (evt.data.cmd) {
-        case "port":
-          if (myPort === undefined) {
-            myPort = evt.data.port;
-            myPort.addEventListener("message", myMessageHandler);
-            myPort.addEventListener("messageerror", myMessageErrorHandler);
-            myPort.start();
-            self.postMessage("port received");
-          } else {
-            // Close and discard received port
-            evt.data.port.close();
-          }
+      switch (evt.data.type) {
+        case "ping": {
+          self.postMessage({
+            type: "echo",
+          });
           break;
-        case "send":
-          myPort.postMessage("From Worker to Window");
+        }
+        case "port": {
+          const port = evt.data.port;
+          const name = evt.data.name;
+          addPort(name, port);
           break;
-        case "close":
-          myPort.close();
+        }
+        case "close": {
+          const name = evt.data.name;
+          ports.get(name).close();
+          ports.delete(name);
           break;
-        default:
+        }
+        default: {
           break;
+        }
       };
     }
     function mainMessageErrorHandler(evt) {
       self.postMessage(evt);
     }
-    function myMessageHandler(evt) {
-      self.postMessage("Received: " + evt.data);
-    }
-    function myMessageErrorHandler(evt) {
-      self.postMessage("port message error");
+    function addPort(name, port) {
+      ports.set(name, port);
+      port.addEventListener("message", myMessageHandler);
+      port.addEventListener("messageerror", myMessageErrorHandler);
+      port.start();
+      function myMessageHandler(evt) {
+        self.postMessage("Received: " + evt.data);
+      }
+      function myMessageErrorHandler(evt) {
+        self.postMessage("port message error");
+      }
     }
   } catch (e) {
     ErrorLog.rethrow({
