@@ -41,6 +41,10 @@ async function start( [ ErrorLog ] ) {
           const port = evt.data.port;
           const name = evt.data.name;
           addPort(name, port);
+          self.postMessage({
+            type: "info",
+            message: "Port added: " + evt.data.name,
+          });
           break;
         }
         case "close": {
@@ -68,9 +72,17 @@ async function start( [ ErrorLog ] ) {
       port.start();
       function myMessageHandler(evt) {
         port.postMessage("Received: " + evt.data);
+        self.postMessage({
+          type: "info",
+          message: "message on port: " + name,
+        });
       }
       function myMessageErrorHandler(evt) {
         port.postMessage("port message error");
+        self.postMessage({
+          type: "info",
+          message: "Error on port: " + name,
+        });
       }
     }
   } catch (e) {
