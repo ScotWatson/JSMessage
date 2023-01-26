@@ -70,6 +70,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     document.body.style.height = window.innerHeight + "px";
     const imgWorker = document.createElement("img");
     imgWorker.src = "Worker.bmp";
+    imgWorker.style.aspectRatio = "1";
     imgWorker.style.position = "absolute";
     imgWorker.style.left = "0%";
     imgWorker.style.top = "0%";
@@ -94,6 +95,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     btnCreateWorker.style.height = "10%";
     const imgCreateWorker = document.createElement("img");
     imgCreateWorker.src = "Create.bmp";
+    imgCreateWorker.style.aspectRatio = "1";
     imgCreateWorker.style.width = "100%";
     imgCreateWorker.style.height = "100%";
     btnCreateWorker.appendChild(imgCreateWorker);
@@ -108,6 +110,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     document.body.appendChild(divWorkers);
     const imgChildWindow = document.createElement("img");
     imgChildWindow.src = "ChildWindow.bmp";
+    imgChildWindow.style.aspectRatio = "1";
     imgChildWindow.style.position = "absolute";
     imgChildWindow.style.left = "0%";
     imgChildWindow.style.top = "50%";
@@ -132,6 +135,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     btnCreateChildWindow.style.height = "10%";
     const imgCreateChildWindow = document.createElement("img");
     imgCreateChildWindow.src = "Create.bmp";
+    imgCreateChildWindow.style.aspectRatio = "1";
     imgCreateChildWindow.style.width = "100%";
     imgCreateChildWindow.style.height = "100%";
     btnCreateChildWindow.appendChild(imgCreateChildWindow);
@@ -170,6 +174,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       divWorker.appendChild(divWorkerHeader);
       const imgWorker = document.createElement("img");
       imgWorker.src = "Worker.bmp";
+      imgWorker.style.aspectRatio = "1";
       imgWorker.style.position = "absolute";
       imgWorker.style.left = "0%";
       imgWorker.style.top = "0%";
@@ -192,6 +197,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       btnViewWorkerLog.style.height = "100%";
       const imgViewWorkerLog = document.createElement("img");
       imgViewWorkerLog.src = "ViewLog.bmp";
+      imgViewWorkerLog.style.aspectRatio = "1";
       imgViewWorkerLog.style.width = "100%";
       imgViewWorkerLog.style.height = "100%";
       btnViewWorkerLog.appendChild(imgViewWorkerLog);
@@ -205,6 +211,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       btnPingWorker.style.height = "100%";
       const imgPingWorker = document.createElement("img");
       imgPingWorker.src = "Ping.bmp";
+      imgPingWorker.style.aspectRatio = "1";
       imgPingWorker.style.width = "100%";
       imgPingWorker.style.height = "100%";
       btnPingWorker.appendChild(imgPingWorker);
@@ -218,6 +225,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       btnCreateChannel.style.height = "100%";
       const imgCreateChannel = document.createElement("img");
       imgCreateChannel.src = "CreateChannel.bmp";
+      imgCreateChannel.style.aspectRatio = "1";
       imgCreateChannel.style.width = "50px";
       imgCreateChannel.style.height = "50px";
       btnCreateChannel.appendChild(imgCreateChannel);
@@ -231,6 +239,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       btnTerminateWorker.style.height = "100%";
       const imgTerminateWorker = document.createElement("img");
       imgTerminateWorker.src = "Delete.bmp";
+      imgTerminateWorker.style.aspectRatio = "1";
       imgTerminateWorker.style.width = "100%";
       imgTerminateWorker.style.height = "100%";
       btnTerminateWorker.appendChild(imgTerminateWorker);
