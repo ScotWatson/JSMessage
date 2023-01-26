@@ -174,16 +174,19 @@ async function start( [ evtWindow, ErrorLog ] ) {
       divWorker.appendChild(divWorkerHeader);
       const imgWorker = document.createElement("img");
       imgWorker.src = "Worker.bmp";
+      imgWorker.style.display = "inline-block";
       imgWorker.style.aspectRatio = "1";
       imgWorker.style.width = "10%";
       divWorkerHeader.appendChild(imgWorker);
       const divWorkerName = document.createElement("div");
       divWorkerName.appendChild(document.createTextNode(workerName));
+      divWorkerName.style.display = "inline-block";
       divWorkerName.style.width = "50%";
       divWorkerName.style.height = "100%";
       divWorkerHeader.appendChild(divWorkerName);
       const btnViewWorkerLog = document.createElement("button");
       btnViewWorkerLog.alt = "View Worker Log";
+      btnViewWorkerLog.style.display = "inline-block";
       btnViewWorkerLog.style.width = "10%";
       btnViewWorkerLog.style.height = "100%";
       const imgViewWorkerLog = document.createElement("img");
@@ -195,6 +198,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       divWorkerHeader.appendChild(btnViewWorkerLog);
       const btnPingWorker = document.createElement("button");
       btnPingWorker.alt = "Ping Worker";
+      btnPingWorker.style.display = "inline-block";
       btnPingWorker.style.width = "10%";
       btnPingWorker.style.height = "100%";
       const imgPingWorker = document.createElement("img");
@@ -206,6 +210,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       divWorkerHeader.appendChild(btnPingWorker);
       const btnCreateChannel = document.createElement("button");
       btnCreateChannel.alt = "Create Channel";
+      btnCreateChannel.style.display = "inline-block";
       btnCreateChannel.style.width = "10%";
       btnCreateChannel.style.height = "100%";
       const imgCreateChannel = document.createElement("img");
@@ -217,6 +222,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       divWorkerHeader.appendChild(btnCreateChannel);
       const btnTerminateWorker = document.createElement("button");
       btnTerminateWorker.alt = "Terminate Worker";
+      btnTerminateWorker.style.display = "inline-block";
       btnTerminateWorker.style.width = "10%";
       btnTerminateWorker.style.height = "100%";
       const imgTerminateWorker = document.createElement("img");
@@ -242,8 +248,6 @@ async function start( [ evtWindow, ErrorLog ] ) {
       });
       btnCreateChannel.addEventListener("click", function () {
         const thisChannelLog = createLog();
-        const divChannel = document.createElement("div");
-        divChannels.appendChild(divChannel);
         const channelName = self.prompt("Enter the new channel name:");
         addEntry(thisWorkerLog, "Create channel: " + channelName);
         const thisChannel = new self.MessageChannel();
@@ -263,9 +267,26 @@ async function start( [ evtWindow, ErrorLog ] ) {
           addEntry(thisChannelLog, "Message Error");
         }
         // Layout
-        divChannel.appendChild(document.createTextNode(channelName));
+        const divChannel = document.createElement("div");
+        divChannels.appendChild(divChannel);
+        const divChannelHeader = document.createElement("div");
+        divChannelHeader.style.width = "100%";
+        divChannel.appendChild(divChannelHeader);
+        const imgChannel = document.createElement("img");
+        imgChannel.src = "Channel.bmp";
+        imgChannel.style.display = "inline-block";
+        imgChannel.style.aspectRatio = "1";
+        imgChannel.style.width = "10%";
+        divChannelHeader.appendChild(imgChannel);
+        const divChannelName = document.createElement("div");
+        divChannelName.style.display = "inline-block";
+        divChannelName.style.width = "50%";
+        divChannelName.appendChild(document.createTextNode(channelName));
+        divChannelHeader.appendChild(divChannelName);
         const btnViewChannelLog = document.createElement("button");
         btnViewChannelLog.alt = "View Worker Channel Log";
+        btnViewChannelLog.style.display = "inline-block";
+        btnViewChannelLog.style.width = "10%";
         const imgViewChannelLog = document.createElement("img");
         imgViewChannelLog.src = "ViewLog.bmp";
         imgViewChannelLog.style.width = "100%";
@@ -274,6 +295,8 @@ async function start( [ evtWindow, ErrorLog ] ) {
         divChannel.appendChild(btnViewChannelLog);
         const btnSendToWorker = document.createElement("button");
         btnSendToWorker.alt = "Send to Worker";
+        btnSendToWorker.style.display = "inline-block";
+        btnSendToWorker.style.width = "10%";
         const imgSendToWorker = document.createElement("img");
         imgSendToWorker.src = "Send.bmp";
         imgSendToWorker.style.width = "100%";
@@ -282,8 +305,10 @@ async function start( [ evtWindow, ErrorLog ] ) {
         divChannel.appendChild(btnSendToWorker);
         const btnCloseWorkerPort = document.createElement("button");
         btnCloseWorkerPort.alt = "Close Worker Port";
+        btnCloseWorkerPort.style.display = "inline-block";
+        btnCloseWorkerPort.style.width = "10%";
         const imgCloseWorkerPort = document.createElement("img");
-        imgCloseWorkerPort.src = "CloseWorkerChannel.bmp";
+        imgCloseWorkerPort.src = "Delete.bmp";
         imgCloseWorkerPort.style.width = "100%";
         imgCloseWorkerPort.style.height = "100%";
         btnCloseWorkerPort.appendChild(imgCloseWorkerPort);
@@ -293,8 +318,9 @@ async function start( [ evtWindow, ErrorLog ] ) {
           showLog(thisChannelLog);
         });
         btnSendToWorker.addEventListener("click", function () {
-          port.postMessage("From Window to Worker");
-          addEntry(thisChannelLog, "Send: From Window to Worker");
+          const message = self.prompt("Enter the message to send:");
+          port.postMessage(message);
+          addEntry(thisChannelLog, "Send: " + message);
         });
         btnCloseWorkerPort.addEventListener("click", function () {
           addEntry(thisWorkerLog, "Close channel: " + channelName);
