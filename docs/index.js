@@ -75,6 +75,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     imgWorker.style.top = "0%";
     imgWorker.style.width = "10%";
     imgWorker.style.height = "10%";
+    document.body.appendChild(imgWorker);
     const inpNewWorkerURL = document.createElement("input");
     inpNewWorkerURL.type = "text";
     inpNewWorkerURL.value = "worker.js";
@@ -83,11 +84,12 @@ async function start( [ evtWindow, ErrorLog ] ) {
     inpNewWorkerURL.style.top = "0%";
     inpNewWorkerURL.style.width = "30%";
     inpNewWorkerURL.style.height = "10%";
+    document.body.appendChild(inpNewWorkerURL);
     const btnCreateWorker = document.createElement("button");
     btnCreateWorker.alt = "Create Worker";
     btnCreateWorker.style.position = "absolute";
-    btnCreateWorker.style.left = "0px";
-    btnCreateWorker.style.top = "0px";
+    btnCreateWorker.style.left = "40%";
+    btnCreateWorker.style.top = "0%";
     btnCreateWorker.style.width = "10%";
     btnCreateWorker.style.height = "10%";
     const imgCreateWorker = document.createElement("img");
@@ -111,6 +113,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     imgChildWindow.style.top = "50%";
     imgChildWindow.style.width = "10%";
     imgChildWindow.style.height = "10%";
+    document.body.appendChild(imgChildWindow);
     const inpNewChildWindowURL = document.createElement("input");
     inpNewChildWindowURL.type = "text";
     inpNewChildWindowURL.value = "https://scotwatson.github.io/JSMessage/index.html";
@@ -119,6 +122,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     inpNewChildWindowURL.style.top = "50%";
     inpNewChildWindowURL.style.width = "30%";
     inpNewChildWindowURL.style.height = "10%";
+    document.body.appendChild(inpNewChildWindowURL);
     const btnCreateChildWindow = document.createElement("button");
     btnCreateChildWindow.alt = "Create Child Window";
     btnCreateChildWindow.style.position = "absolute";
@@ -170,6 +174,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       imgWorker.style.left = "0%";
       imgWorker.style.top = "0%";
       imgWorker.style.width = "10%";
+      divWorker.appendChild(imgWorker);
       const divWorkerName = document.createElement("div");
       divWorkerName.appendChild(document.createTextNode(workerName));
       divWorkerName.style.position = "absolute";
@@ -231,6 +236,8 @@ async function start( [ evtWindow, ErrorLog ] ) {
       btnTerminateWorker.appendChild(imgTerminateWorker);
       divWorker.appendChild(btnTerminateWorker);
       const divChannels = document.createElement("div");
+      divChannels.style.left = "10%";
+      divChannels.style.width = "90%";
       divWorker.appendChild(divChannels);
       // Functions
       btnViewWorkerLog.addEventListener("click", function () {
