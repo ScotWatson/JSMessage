@@ -181,6 +181,14 @@ async function start( [ evtWindow, ErrorLog ] ) {
         const channelName = self.prompt("Enter the new channel name:");
         addEntry(thisWorkerLog, "Create channel: " + channelName);
         const port = createChannel(channelName);
+        port.addEventListener("message", channelMessageHandler);
+        port.addEventListener("messageerror", channelMessageErrorHandler);
+        function channelMessageHandler(evt) {
+          addEntry(thisChannelLog, "Received: " + evt.data);
+        }
+        function channelMessageErrorHandler(evt) {
+          addEntry(thisChannelLog, "Message Error");
+        }
         divChannel.appendChild(document.createTextNode(channelName));
         const btnViewChannelLog = document.createElement("button");
         btnViewChannelLog.alt = "View Worker Channel Log";
@@ -256,13 +264,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
         }
       }
       function thisWorkerMessageErrorHandler(evt) {
-        console.error(evt);
-      }
-      function newWorkerMessageHandler(evt) {
-        console.log(evt);
-      }
-      function newWorkerMessageErrorHandler(evt) {
-        console.error(evt);
+        addEntry(thisWorkerLog, "Message Error");
       }
     });
 
