@@ -174,7 +174,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       imgWorker.style.left = "0%";
       imgWorker.style.top = "0%";
       imgWorker.style.width = "10%";
-      divWorker.appendChild(imgWorker);
+      divWorkerHeader.appendChild(imgWorker);
       const divWorkerName = document.createElement("div");
       divWorkerName.appendChild(document.createTextNode(workerName));
       divWorkerName.style.position = "absolute";
@@ -182,7 +182,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       divWorkerName.style.top = "0%";
       divWorkerName.style.width = "50%";
       divWorkerName.style.height = "100%";
-      divWorker.appendChild(divWorkerName);
+      divWorkerHeader.appendChild(divWorkerName);
       const btnViewWorkerLog = document.createElement("button");
       btnViewWorkerLog.alt = "View Worker Log";
       btnViewWorkerLog.style.position = "absolute";
@@ -195,7 +195,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       imgViewWorkerLog.style.width = "100%";
       imgViewWorkerLog.style.height = "100%";
       btnViewWorkerLog.appendChild(imgViewWorkerLog);
-      divWorker.appendChild(btnViewWorkerLog);
+      divWorkerHeader.appendChild(btnViewWorkerLog);
       const btnPingWorker = document.createElement("button");
       btnPingWorker.alt = "Ping Worker";
       btnPingWorker.style.position = "absolute";
@@ -208,7 +208,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       imgPingWorker.style.width = "100%";
       imgPingWorker.style.height = "100%";
       btnPingWorker.appendChild(imgPingWorker);
-      divWorker.appendChild(btnPingWorker);
+      divWorkerHeader.appendChild(btnPingWorker);
       const btnCreateChannel = document.createElement("button");
       btnCreateChannel.alt = "Create Channel";
       btnCreateChannel.style.position = "absolute";
@@ -221,7 +221,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       imgCreateChannel.style.width = "50px";
       imgCreateChannel.style.height = "50px";
       btnCreateChannel.appendChild(imgCreateChannel);
-      divWorker.appendChild(btnCreateChannel);
+      divWorkerHeader.appendChild(btnCreateChannel);
       const btnTerminateWorker = document.createElement("button");
       btnTerminateWorker.alt = "Terminate Worker";
       btnTerminateWorker.style.position = "absolute";
@@ -234,7 +234,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       imgTerminateWorker.style.width = "100%";
       imgTerminateWorker.style.height = "100%";
       btnTerminateWorker.appendChild(imgTerminateWorker);
-      divWorker.appendChild(btnTerminateWorker);
+      divWorkerHeader.appendChild(btnTerminateWorker);
       const divChannels = document.createElement("div");
       divChannels.style.left = "10%";
       divChannels.style.width = "90%";
