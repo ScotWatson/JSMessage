@@ -71,18 +71,11 @@ async function start( [ ErrorLog ] ) {
       port.addEventListener("messageerror", myMessageErrorHandler);
       port.start();
       function myMessageHandler(evt) {
-        port.postMessage("Received: " + evt.data);
-        self.postMessage({
-          type: "info",
-          message: "message on port: " + name,
-        });
+        // Echo back any data received
+        port.postMessage(evt.data);
       }
       function myMessageErrorHandler(evt) {
-        port.postMessage("port message error");
-        self.postMessage({
-          type: "info",
-          message: "Error on port: " + name,
-        });
+        port.postMessage("!!!Message Error!!!");
       }
     }
   } catch (e) {
