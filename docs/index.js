@@ -266,21 +266,19 @@ async function start( [ evtWindow, ErrorLog ] ) {
         }
         // Layout
         const divChannel = document.createElement("div");
+        divChannel.style.width = "100%";
         divChannels.appendChild(divChannel);
-        const divChannelHeader = document.createElement("div");
-        divChannelHeader.style.width = "100%";
-        divChannel.appendChild(divChannelHeader);
         const imgChannel = document.createElement("img");
         imgChannel.src = "Channel.bmp";
         imgChannel.style.display = "inline-block";
         imgChannel.style.aspectRatio = "1";
         imgChannel.style.width = "10%";
-        divChannelHeader.appendChild(imgChannel);
+        divChannel.appendChild(imgChannel);
         const divChannelName = document.createElement("div");
         divChannelName.style.display = "inline-block";
         divChannelName.style.width = "50%";
         divChannelName.appendChild(document.createTextNode(channelName));
-        divChannelHeader.appendChild(divChannelName);
+        divChannel.appendChild(divChannelName);
         const btnViewChannelLog = document.createElement("button");
         btnViewChannelLog.alt = "View Worker Channel Log";
         btnViewChannelLog.style.display = "inline-block";
