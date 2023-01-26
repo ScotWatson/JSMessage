@@ -75,7 +75,6 @@ async function start( [ evtWindow, ErrorLog ] ) {
     imgWorker.style.left = "0%";
     imgWorker.style.top = "0%";
     imgWorker.style.width = "10%";
-    imgWorker.style.height = "10%";
     document.body.appendChild(imgWorker);
     const inpNewWorkerURL = document.createElement("input");
     inpNewWorkerURL.type = "text";
@@ -115,7 +114,6 @@ async function start( [ evtWindow, ErrorLog ] ) {
     imgChildWindow.style.left = "0%";
     imgChildWindow.style.top = "50%";
     imgChildWindow.style.width = "10%";
-    imgChildWindow.style.height = "10%";
     document.body.appendChild(imgChildWindow);
     const inpNewChildWindowURL = document.createElement("input");
     inpNewChildWindowURL.type = "text";
@@ -233,8 +231,8 @@ async function start( [ evtWindow, ErrorLog ] ) {
       btnTerminateWorker.appendChild(imgTerminateWorker);
       divWorkerHeader.appendChild(btnTerminateWorker);
       const divChannels = document.createElement("div");
-      divChannels.style.left = "10%";
-      divChannels.style.width = "90%";
+      divChannels.style.paddingLeft = "10%";
+      divChannels.style.width = "100%";
       divWorker.appendChild(divChannels);
       // Functions
       btnViewWorkerLog.addEventListener("click", function () {
