@@ -68,17 +68,32 @@ async function start( [ evtWindow, ErrorLog ] ) {
     // Layout
     document.body.style.width = "100%";
     document.body.style.height = window.innerHeight + "px";
+    const imgWorker = document.createElement("img");
+    imgWorker.src = "Worker.bmp";
+    imgWorker.style.position = "absolute";
+    imgWorker.style.left = "0%";
+    imgWorker.style.top = "0%";
+    imgWorker.style.width = "10%";
+    imgWorker.style.height = "10%";
+    const inpNewWorkerURL = document.createElement("input");
+    inpNewWorkerURL.type = "text";
+    inpNewWorkerURL.value = "worker.js";
+    inpNewWorkerURL.style.position = "absolute";
+    inpNewWorkerURL.style.left = "10%";
+    inpNewWorkerURL.style.top = "0%";
+    inpNewWorkerURL.style.width = "30%";
+    inpNewWorkerURL.style.height = "10%";
     const btnCreateWorker = document.createElement("button");
     btnCreateWorker.alt = "Create Worker";
     btnCreateWorker.style.position = "absolute";
     btnCreateWorker.style.left = "0px";
     btnCreateWorker.style.top = "0px";
-    btnCreateWorker.style.width = "50%";
+    btnCreateWorker.style.width = "10%";
     btnCreateWorker.style.height = "10%";
     const imgCreateWorker = document.createElement("img");
-    imgCreateWorker.src = "CreateWorker.bmp";
-    imgCreateWorker.style.width = "50px";
-    imgCreateWorker.style.height = "50px";
+    imgCreateWorker.src = "Create.bmp";
+    imgCreateWorker.style.width = "100%";
+    imgCreateWorker.style.height = "100%";
     btnCreateWorker.appendChild(imgCreateWorker);
     document.body.appendChild(btnCreateWorker);
     const divWorkers = document.createElement("div");
@@ -89,17 +104,32 @@ async function start( [ evtWindow, ErrorLog ] ) {
     divWorkers.style.height = "40%";
     divWorkers.style.overflow = "scroll";
     document.body.appendChild(divWorkers);
+    const imgChildWindow = document.createElement("img");
+    imgChildWindow.src = "ChildWindow.bmp";
+    imgChildWindow.style.position = "absolute";
+    imgChildWindow.style.left = "0%";
+    imgChildWindow.style.top = "50%";
+    imgChildWindow.style.width = "10%";
+    imgChildWindow.style.height = "10%";
+    const inpNewChildWindowURL = document.createElement("input");
+    inpNewChildWindowURL.type = "text";
+    inpNewChildWindowURL.value = "https://scotwatson.github.io/JSMessage/index.html";
+    inpNewChildWindowURL.style.position = "absolute";
+    inpNewChildWindowURL.style.left = "10%";
+    inpNewChildWindowURL.style.top = "50%";
+    inpNewChildWindowURL.style.width = "30%";
+    inpNewChildWindowURL.style.height = "10%";
     const btnCreateChildWindow = document.createElement("button");
     btnCreateChildWindow.alt = "Create Child Window";
     btnCreateChildWindow.style.position = "absolute";
-    btnCreateChildWindow.style.left = "0px";
+    btnCreateChildWindow.style.left = "40%";
     btnCreateChildWindow.style.top = "50%";
-    btnCreateChildWindow.style.width = "50%";
+    btnCreateChildWindow.style.width = "10%";
     btnCreateChildWindow.style.height = "10%";
     const imgCreateChildWindow = document.createElement("img");
-    imgCreateChildWindow.src = "CreateChildWindow.bmp";
-    imgCreateChildWindow.style.width = "50px";
-    imgCreateChildWindow.style.height = "50px";
+    imgCreateChildWindow.src = "Create.bmp";
+    imgCreateChildWindow.style.width = "100%";
+    imgCreateChildWindow.style.height = "100%";
     btnCreateChildWindow.appendChild(imgCreateChildWindow);
     document.body.appendChild(btnCreateChildWindow);
     const divChildWindows = document.createElement("div");
@@ -121,53 +151,91 @@ async function start( [ evtWindow, ErrorLog ] ) {
     // Click Listeners
     btnCreateWorker.addEventListener("click", function () {
       const thisWorkerLog = createLog();
-      const divWorker = document.createElement("div");
-      divWorkers.appendChild(divWorker);
-      const thisWorker = new Worker("worker.js");
+      const workerName = self.prompt("Enter the new worker name:");
+      const thisWorker = new self.Worker(inpNewWorkerURL.value, {
+        name: workerName,
+      });
       thisWorker.addEventListener("message", thisWorkerMessageHandler);
       thisWorker.addEventListener("messageerror", thisWorkerMessageErrorHandler);
-      const thisWorkerChannels = new Map();
-      function createChannel(name) {
-        const thisChannel = new self.MessageChannel();
-        thisWorkerChannels.set(name, thisChannel);
-        thisWorker.postMessage({
-          type: "open",
-          name: name,
-          port: thisChannel.port2,
-        }, [ thisChannel.port2 ]);
-        thisChannel.port1.start();
-        return thisChannel.port1;
-      }
-      divWorker.appendChild(document.createTextNode("Worker"));
+      // Layout
+      const divWorker = document.createElement("div");
+      divWorker.style.width = "100%";
+      divWorkers.appendChild(divWorker);
+      const divWorkerHeader = document.createElement("div");
+      divWorkerHeader.style.width = "100%";
+      divWorker.appendChild(divWorkerHeader);
+      const imgWorker = document.createElement("img");
+      imgWorker.src = "Worker.bmp";
+      imgWorker.style.position = "absolute";
+      imgWorker.style.left = "0%";
+      imgWorker.style.top = "0%";
+      imgWorker.style.width = "10%";
+      const divWorkerName = document.createElement("div");
+      divWorkerName.appendChild(document.createTextNode(workerName));
+      divWorkerName.style.position = "absolute";
+      divWorkerName.style.left = "10%";
+      divWorkerName.style.top = "0%";
+      divWorkerName.style.width = "50%";
+      divWorkerName.style.height = "100%";
+      divWorker.appendChild(divWorkerName);
       const btnViewWorkerLog = document.createElement("button");
       btnViewWorkerLog.alt = "View Worker Log";
+      btnViewWorkerLog.style.position = "absolute";
+      btnViewWorkerLog.style.left = "60%";
+      btnViewWorkerLog.style.top = "0%";
+      btnViewWorkerLog.style.width = "10%";
+      btnViewWorkerLog.style.height = "100%";
       const imgViewWorkerLog = document.createElement("img");
       imgViewWorkerLog.src = "ViewLog.bmp";
-      imgViewWorkerLog.style.width = "50px";
-      imgViewWorkerLog.style.height = "50px";
+      imgViewWorkerLog.style.width = "100%";
+      imgViewWorkerLog.style.height = "100%";
       btnViewWorkerLog.appendChild(imgViewWorkerLog);
       divWorker.appendChild(btnViewWorkerLog);
-      btnViewWorkerLog.addEventListener("click", function () {
-        showLog(thisWorkerLog);
-      });
       const btnPingWorker = document.createElement("button");
       btnPingWorker.alt = "Ping Worker";
+      btnPingWorker.style.position = "absolute";
+      btnPingWorker.style.left = "70%";
+      btnPingWorker.style.top = "0%";
+      btnPingWorker.style.width = "10%";
+      btnPingWorker.style.height = "100%";
       const imgPingWorker = document.createElement("img");
-      imgPingWorker.src = "";
-      imgPingWorker.style.width = "50px";
-      imgPingWorker.style.height = "50px";
+      imgPingWorker.src = "Ping.bmp";
+      imgPingWorker.style.width = "100%";
+      imgPingWorker.style.height = "100%";
       btnPingWorker.appendChild(imgPingWorker);
       divWorker.appendChild(btnPingWorker);
       const btnCreateChannel = document.createElement("button");
       btnCreateChannel.alt = "Create Channel";
+      btnCreateChannel.style.position = "absolute";
+      btnCreateChannel.style.left = "80%";
+      btnCreateChannel.style.top = "0%";
+      btnCreateChannel.style.width = "10%";
+      btnCreateChannel.style.height = "100%";
       const imgCreateChannel = document.createElement("img");
-      imgCreateChannel.src = "";
+      imgCreateChannel.src = "CreateChannel.bmp";
       imgCreateChannel.style.width = "50px";
       imgCreateChannel.style.height = "50px";
       btnCreateChannel.appendChild(imgCreateChannel);
       divWorker.appendChild(btnCreateChannel);
+      const btnTerminateWorker = document.createElement("button");
+      btnTerminateWorker.alt = "Terminate Worker";
+      btnTerminateWorker.style.position = "absolute";
+      btnTerminateWorker.style.left = "90%";
+      btnTerminateWorker.style.top = "0%";
+      btnTerminateWorker.style.width = "10%";
+      btnTerminateWorker.style.height = "100%";
+      const imgTerminateWorker = document.createElement("img");
+      imgTerminateWorker.src = "Delete.bmp";
+      imgTerminateWorker.style.width = "100%";
+      imgTerminateWorker.style.height = "100%";
+      btnTerminateWorker.appendChild(imgTerminateWorker);
+      divWorker.appendChild(btnTerminateWorker);
       const divChannels = document.createElement("div");
       divWorker.appendChild(divChannels);
+      // Functions
+      btnViewWorkerLog.addEventListener("click", function () {
+        showLog(thisWorkerLog);
+      });
       btnPingWorker.addEventListener("click", function () {
         addEntry(thisWorkerLog, "Ping sent");
         thisWorker.postMessage({
@@ -180,7 +248,14 @@ async function start( [ evtWindow, ErrorLog ] ) {
         divChannels.appendChild(divChannel);
         const channelName = self.prompt("Enter the new channel name:");
         addEntry(thisWorkerLog, "Create channel: " + channelName);
-        const port = createChannel(channelName);
+        const thisChannel = new self.MessageChannel();
+        thisWorker.postMessage({
+          type: "open",
+          name: channelName,
+          port: thisChannel.port2,
+        }, [ thisChannel.port2 ]);
+        thisChannel.port1.start();
+        const port = thisChannel.port1;
         port.addEventListener("message", channelMessageHandler);
         port.addEventListener("messageerror", channelMessageErrorHandler);
         function channelMessageHandler(evt) {
@@ -189,34 +264,36 @@ async function start( [ evtWindow, ErrorLog ] ) {
         function channelMessageErrorHandler(evt) {
           addEntry(thisChannelLog, "Message Error");
         }
+        // Layout
         divChannel.appendChild(document.createTextNode(channelName));
         const btnViewChannelLog = document.createElement("button");
         btnViewChannelLog.alt = "View Worker Channel Log";
         const imgViewChannelLog = document.createElement("img");
         imgViewChannelLog.src = "ViewLog.bmp";
-        imgViewChannelLog.style.width = "50px";
-        imgViewChannelLog.style.height = "50px";
+        imgViewChannelLog.style.width = "100%";
+        imgViewChannelLog.style.height = "100%";
         btnViewChannelLog.appendChild(imgViewChannelLog);
         divChannel.appendChild(btnViewChannelLog);
-        btnViewChannelLog.addEventListener("click", function () {
-          showLog(thisChannelLog);
-        });
         const btnSendToWorker = document.createElement("button");
         btnSendToWorker.alt = "Send to Worker";
         const imgSendToWorker = document.createElement("img");
         imgSendToWorker.src = "Send.bmp";
-        imgSendToWorker.style.width = "50px";
-        imgSendToWorker.style.height = "50px";
+        imgSendToWorker.style.width = "100%";
+        imgSendToWorker.style.height = "100%";
         btnSendToWorker.appendChild(imgSendToWorker);
         divChannel.appendChild(btnSendToWorker);
         const btnCloseWorkerPort = document.createElement("button");
         btnCloseWorkerPort.alt = "Close Worker Port";
         const imgCloseWorkerPort = document.createElement("img");
         imgCloseWorkerPort.src = "CloseWorkerChannel.bmp";
-        imgCloseWorkerPort.style.width = "50px";
-        imgCloseWorkerPort.style.height = "50px";
+        imgCloseWorkerPort.style.width = "100%";
+        imgCloseWorkerPort.style.height = "100%";
         btnCloseWorkerPort.appendChild(imgCloseWorkerPort);
         divChannel.appendChild(btnCloseWorkerPort);
+        // Click Listeners
+        btnViewChannelLog.addEventListener("click", function () {
+          showLog(thisChannelLog);
+        });
         btnSendToWorker.addEventListener("click", function () {
           port.postMessage("From Window to Worker");
           addEntry(thisChannelLog, "Send: From Window to Worker");
@@ -230,6 +307,10 @@ async function start( [ evtWindow, ErrorLog ] ) {
           });
           divChannel.remove();
         });
+      });
+      btnTerminateWorker.addEventListener("click", function () {
+        thisWorker.terminate();
+        divWorker.remove();
       });
       function thisWorkerMessageHandler(evt) {
         if (!("type" in evt.data)) {
