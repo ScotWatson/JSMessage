@@ -41,10 +41,6 @@ async function start( [ ErrorLog ] ) {
           const port = evt.data.port;
           const name = evt.data.name;
           addPort(name, port);
-          self.postMessage({
-            type: "info",
-            message: "Port added: " + evt.data.name,
-          });
           break;
         }
         case "close": {
