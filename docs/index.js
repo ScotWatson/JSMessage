@@ -71,14 +71,16 @@ async function start( [ evtWindow, ErrorLog ] ) {
     const imgWorker = document.createElement("img");
     imgWorker.src = "Worker.bmp";
     imgWorker.style.aspectRatio = "1";
+    imgWorker.style.display = "inline-block";
     imgWorker.style.position = "absolute";
     imgWorker.style.left = "0%";
     imgWorker.style.top = "0%";
-    imgWorker.style.width = "10%";
+    imgWorker.style.height = "10%";
     document.body.appendChild(imgWorker);
     const inpNewWorkerURL = document.createElement("input");
     inpNewWorkerURL.type = "text";
     inpNewWorkerURL.value = "worker.js";
+    inpNewWorkerURL.style.display = "inline-block";
     inpNewWorkerURL.style.position = "absolute";
     inpNewWorkerURL.style.left = "10%";
     inpNewWorkerURL.style.top = "0%";
@@ -87,6 +89,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     document.body.appendChild(inpNewWorkerURL);
     const btnCreateWorker = document.createElement("button");
     btnCreateWorker.alt = "Create Worker";
+    btnCreateWorker.style.display = "inline-block";
     btnCreateWorker.style.position = "absolute";
     btnCreateWorker.style.left = "40%";
     btnCreateWorker.style.top = "0%";
