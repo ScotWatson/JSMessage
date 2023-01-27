@@ -676,6 +676,9 @@ async function start( [ evtWindow, ErrorLog ] ) {
       });
       // Message Handlers
       function mainParentWindowMessageHandler(evt) {
+        if (evt.source !== parentWindow) {
+          return;
+        }
         switch (evt.data.type) {
           case "ping": {
             parentWindow.postMessage({
