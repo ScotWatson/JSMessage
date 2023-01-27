@@ -399,6 +399,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
           type: "ping",
         }, otherOrigin);
       }, 500);
+      childWindows.add(childWindow);
       // Layout
       const divChildWindow = document.createElement("div");
       divChildWindow.style.width = "100%";
@@ -602,7 +603,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
         addEntry(childWindowLog, "[Eve] Error: " + evt);
       }
     });
-    function registerParent(parentWindow) {
+    function registerParent(parentWindow, parentWindowOrigin) {
       const parentWindowLog = createLog();
       self.addEventListener("message", mainParentWindowMessageHandler);
       self.addEventListener("messageerror", mainParentWindowMessageErrorHandler);
@@ -637,6 +638,12 @@ async function start( [ evtWindow, ErrorLog ] ) {
       divChannels.style.paddingLeft = "10%";
       divChannels.style.width = "100%";
       divParentWindow.appendChild(divChannels);
+      // Send Response
+      parentWindow.postMessage({
+        type: "echo",
+      }, parentWindowOrigin);
+      addEntry(parentWindowLog, "Initial Ping & Echo");
+      // Message Handlers
       function mainParentWindowMessageHandler(evt) {
         switch (evt.data.type) {
           case "ping": {
@@ -760,10 +767,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       }
       // Unknown Window
       if (evt.data.type === "ping") {
-        registerParent(fromWindow);
-        fromWindow.postMessage({
-          type: "echo",
-        }, fromOrigin);
+        registerParent(fromWindow, fromOrigin);
       } else {
         fromWindow.postMessage({
           type: "error",
