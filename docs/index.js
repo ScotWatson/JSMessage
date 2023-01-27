@@ -383,7 +383,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     btnCreateChildWindow.addEventListener("click", function (evt) {
       const childWindowLog = createLog();
       const childWindowName = self.prompt("Enter the new child window name:");
-      const childWindow = self.window.open(otherOrigin + "/JSMessage/index.html", childWindowName, "noopener");
+      const childWindow = self.window.open(otherOrigin + "/JSMessage/index.html", childWindowName);
       self.addEventListener("message", mainChildWindowMessageHandler);
       self.addEventListener("messageerror", mainChildWindowMessageErrorHandler);
       const intervalHandle = self.setInterval(function () {
