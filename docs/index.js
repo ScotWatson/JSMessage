@@ -46,7 +46,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       divLog.style.top = "50%";
       divLog.style.width = "50%";
       divLog.style.height = "50%";
-      divLog.style.overflow = "scroll";
+      divLog.style.overflow = "hidden scroll";
       document.body.appendChild(divLog);
       logs.add(divLog);
       return divLog;
@@ -71,6 +71,15 @@ async function start( [ evtWindow, ErrorLog ] ) {
     // Layout
     document.body.style.width = "100%";
     document.body.style.height = window.innerHeight + "px";
+    document.body.style.padding = "0px";
+    const divWorkersHeader = document.createElement("div");
+    divWorkersHeader.style.position = "absolute";
+    divWorkersHeader.style.left = "0%";
+    divWorkersHeader.style.top = "0%";
+    divWorkersHeader.style.width = "50%";
+    divWorkersHeader.style.height = "10%";
+    divWorkersHeader.style.overflow = "hidden";
+    document.body.appendChild(divWorkersHeader);
     const imgWorker = document.createElement("img");
     imgWorker.src = "Worker.bmp";
     imgWorker.style.aspectRatio = "1";
@@ -78,40 +87,34 @@ async function start( [ evtWindow, ErrorLog ] ) {
     imgWorker.style.position = "absolute";
     imgWorker.style.left = "0%";
     imgWorker.style.top = "0%";
-    imgWorker.style.height = "10%";
-    document.body.appendChild(imgWorker);
+    imgWorker.style.height = "100%";
+    divWorkersHeader.appendChild(imgWorker);
     const inpNewWorkerURL = document.createElement("input");
     inpNewWorkerURL.type = "text";
     inpNewWorkerURL.value = "worker.js";
     inpNewWorkerURL.style.display = "inline-block";
-    inpNewWorkerURL.style.position = "absolute";
-    inpNewWorkerURL.style.left = "10%";
-    inpNewWorkerURL.style.top = "0%";
-    inpNewWorkerURL.style.width = "30%";
-    inpNewWorkerURL.style.height = "10%";
-    document.body.appendChild(inpNewWorkerURL);
+    inpNewWorkerURL.style.width = "80%";
+    inpNewWorkerURL.style.height = "100%";
+    divWorkersHeader.appendChild(inpNewWorkerURL);
     const btnCreateWorker = document.createElement("button");
     btnCreateWorker.alt = "Create Worker";
     btnCreateWorker.style.display = "inline-block";
-    btnCreateWorker.style.position = "absolute";
-    btnCreateWorker.style.left = "40%";
-    btnCreateWorker.style.top = "0%";
     btnCreateWorker.style.width = "10%";
-    btnCreateWorker.style.height = "10%";
+    btnCreateWorker.style.height = "100%";
     const imgCreateWorker = document.createElement("img");
     imgCreateWorker.src = "Create.bmp";
     imgCreateWorker.style.aspectRatio = "1";
     imgCreateWorker.style.width = "100%";
     imgCreateWorker.style.height = "100%";
     btnCreateWorker.appendChild(imgCreateWorker);
-    document.body.appendChild(btnCreateWorker);
+    divWorkersHeader.appendChild(btnCreateWorker);
     const divWorkers = document.createElement("div");
     divWorkers.style.position = "absolute";
     divWorkers.style.left = "0px";
     divWorkers.style.top = "10%";
     divWorkers.style.width = "50%";
     divWorkers.style.height = "40%";
-    divWorkers.style.overflow = "scroll";
+    divWorkers.style.overflow = "hidden scroll";
     document.body.appendChild(divWorkers);
     const imgChildWindow = document.createElement("img");
     imgChildWindow.src = "ChildWindow.bmp";
@@ -150,7 +153,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     divChildWindows.style.top = "60%";
     divChildWindows.style.width = "50%";
     divChildWindows.style.height = "40%";
-    divChildWindows.style.overflow = "scroll";
+    divChildWindows.style.overflow = "hidden scroll";
     document.body.appendChild(divChildWindows);
     const divParentWindows = document.createElement("div");
     divParentWindows.style.position = "absolute";
@@ -158,7 +161,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     divParentWindows.style.top = "0px";
     divParentWindows.style.width = "50%";
     divParentWindows.style.height = "50%";
-    divParentWindows.style.overflow = "scroll";
+    divParentWindows.style.overflow = "hidden scroll";
     document.body.appendChild(divParentWindows);
     // Click Listeners
     btnCreateWorker.addEventListener("click", function () {
@@ -380,7 +383,6 @@ async function start( [ evtWindow, ErrorLog ] ) {
     self.addEventListener("messageerror", mainMessageErrorHandler);
 
     const otherOrigin = "https://scotwatson.github.io";
-    const childWindows = new Set();
 
     btnCreateChildWindow.addEventListener("click", function (evt) {
       const childWindowLog = createLog();
@@ -591,7 +593,6 @@ async function start( [ evtWindow, ErrorLog ] ) {
         addEntry(childWindowLog, "[Eve] Error: " + evt);
       }
     });
-    let parentWindows = new Set();
     function registerParent(parentWindow) {
       const parentWindowLog = createLog();
       self.addEventListener("message", mainParentWindowMessageHandler);
