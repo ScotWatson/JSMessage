@@ -40,7 +40,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     // Log functions
     function createLog() {
       const divLog = document.createElement("div");
-      divLog.style.display = "block";
+      divLog.style.display = "none";
       divLog.style.position = "absolute";
       divLog.style.left = "50%";
       divLog.style.top = "50%";
@@ -640,6 +640,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       divParentWindowHeader.style.width = "100%";
       divParentWindow.appendChild(divParentWindowHeader);
       const imgParentWindow = document.createElement("img");
+      imgParentWindow.src = "ParentWindow.bmp";
       imgParentWindow.style.display = "inline-block";
       imgParentWindow.style.width = "10%";
       divParentWindowHeader.appendChild(imgParentWindow);
@@ -669,6 +670,10 @@ async function start( [ evtWindow, ErrorLog ] ) {
       addEntry(parentWindowLog, "Initial Ping & Echo");
       const channels = new Map();
       const channelDivs = new Map();
+      // Click Listeners
+      btnViewWindowLog.addEventListener("click", function () {
+        showLog(parentWindowLog);
+      });
       // Message Handlers
       function mainParentWindowMessageHandler(evt) {
         switch (evt.data.type) {
