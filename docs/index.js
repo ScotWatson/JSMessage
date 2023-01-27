@@ -653,7 +653,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
             addEntry(parentWindowLog, "Ping & Echo");
             break;
           }
-          case "port": {
+          case "open": {
             const parentWindowChannelLog = createLog();
             const channelName = evt.data.name;
             const port = evt.data.port;
