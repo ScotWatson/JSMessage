@@ -133,20 +133,20 @@ async function start( [ evtWindow, ErrorLog ] ) {
     const inpNewChildWindowURL = document.createElement("input");
     inpNewChildWindowURL.type = "text";
     inpNewChildWindowURL.value = "https://scotwatson.github.io/JSMessage/index.html";
-    imgChildWindow.style.display = "inline-block";
-    imgChildWindow.style.verticalAlign = "bottom";
+    inpNewChildWindowURL.style.display = "inline-block";
+    inpNewChildWindowURL.style.verticalAlign = "bottom";
     inpNewChildWindowURL.style.width = "75%";
     inpNewChildWindowURL.style.height = "100%";
     divChildWindowsHeader.appendChild(inpNewChildWindowURL);
     const btnCreateChildWindow = document.createElement("button");
     btnCreateChildWindow.alt = "Create Child Window";
-    imgChildWindow.style.display = "inline-block";
+    btnCreateChildWindow.style.display = "inline-block";
     btnCreateChildWindow.style.width = "10%";
     btnCreateChildWindow.style.height = "100%";
     const imgCreateChildWindow = document.createElement("img");
     imgCreateChildWindow.src = "Create.bmp";
     imgCreateChildWindow.style.aspectRatio = "1";
-    imgChildWindow.style.display = "inline-block";
+    imgCreateChildWindow.style.display = "inline-block";
     imgCreateChildWindow.style.maxWidth = "100%";
     imgCreateChildWindow.style.maxHeight = "100%";
     btnCreateChildWindow.appendChild(imgCreateChildWindow);
@@ -406,6 +406,16 @@ async function start( [ evtWindow, ErrorLog ] ) {
       const divChildWindowHeader = document.createElement("div");
       divChildWindowHeader.style.width = "100%";
       divChildWindow.appendChild(divChildWindowHeader);
+      const imgChildWindow = document.createElement("img");
+      imgChildWindow.src = "ChildWindow.bmp";
+      imgChildWindow.style.width = "10%";
+      imgChildWindow.style.height = "100%";
+      imgChildWindow.appendChild(imgChildWindow);
+      const divChildWindowName = document.createElement("div");
+      divChildWindowName.style.display = "inline-block";
+      divChildWindowName.style.width = "50%";
+      divChildWindowName.appendChild(document.createTextNode(childWindowName));
+      divChildWindowHeader.appendChild(divChildWindowName);
       const btnViewWindowLog = document.createElement("button");
       btnViewWindowLog.alt = "View Child Window Log";
       btnViewWindowLog.style.display = "inline-block";
@@ -416,11 +426,6 @@ async function start( [ evtWindow, ErrorLog ] ) {
       imgViewWindowLog.style.height = "100%";
       btnViewWindowLog.appendChild(imgViewWindowLog);
       divChildWindowHeader.appendChild(btnViewWindowLog);
-      const divChildWindowName = document.createElement("div");
-      divChildWindowName.style.display = "inline-block";
-      divChildWindowName.style.width = "50%";
-      divChildWindowName.appendChild(document.createTextNode(childWindowName));
-      divChildWindowHeader.appendChild(divChildWindowName);
       const btnPing = document.createElement("button");
       btnPing.alt = "Ping";
       btnPing.style.display = "inline-block";
@@ -616,7 +621,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       const divParentWindowName = document.createElement("div");
       divParentWindowName.style.display = "inline-block";
       divParentWindowName.style.width = "50%";
-      divParentWindowName.appendChild(document.createTextNode(window.name));
+      divParentWindowName.appendChild(document.createTextNode(parentWindow.name));
       divParentWindowHeader.appendChild(divParentWindowName);
       const btnViewWindowLog = document.createElement("button");
       btnViewWindowLog.alt = "View Parent Window Log";
@@ -638,14 +643,15 @@ async function start( [ evtWindow, ErrorLog ] ) {
             const parentWindowChannelLog = createLog();
             const channelName = evt.data.name;
             const port = evt.data.port;
+            addEntry(parentWindowLog, "Channel Opened: " + channelName);
             port.addEventListener("message", parentWindowMessageHandler);
             port.addEventListener("messageerror", parentWindowMessageErrorHandler);
             port.start();
             function parentWindowMessageHandler(evt) {
-              addEntry(parentWindowLog, "Data: " + evt.data);
+              addEntry(parentWindowChannelLog, "Data: " + evt.data);
             }
             function parentWindowMessageErrorHandler(evt) {
-              addEntry(parentWindowLog, "Error: " + evt);
+              addEntry(parentWindowChannelLog, "Error: " + evt);
             }
             // Layout
             const divChannel = document.createElement("div");
@@ -707,13 +713,16 @@ async function start( [ evtWindow, ErrorLog ] ) {
           }
           case "error": {
             // Process Error
+            addEntry(parentWindowLog, "Error Received: " + evt.data.message);
             break;
           }
           default: {
+            const message = "Unrecognized Type: " + evt.data.type;
             parentWindow.postMessage({
               type: "error",
-              message: "Unrecognized Type: " + evt.data.type,
+              message: message,
             });
+            addEntry(parentWindowLog, "Error Sent: " + message);
             break;
           }
         };
