@@ -65,6 +65,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     function deleteLog(divLog) {
       divLog.remove();
     }
+    self.window.name = self.prompt("Enter the name for this window:");
     // Layout
     document.body.style.width = "100%";
     document.body.style.height = window.innerHeight + "px";
@@ -414,11 +415,11 @@ async function start( [ evtWindow, ErrorLog ] ) {
       btnPing.alt = "Ping";
       btnPing.style.display = "inline-block";
       btnPing.style.width = "10%";
-      const imgCreateChannel = document.createElement("img");
-      imgCreateChannel.src = "Ping.bmp";
-      imgCreateChannel.style.width = "100%";
-      imgCreateChannel.style.height = "100%";
-      btnPing.appendChild(imgCreateChannel);
+      const imgPing = document.createElement("img");
+      imgPing.src = "Ping.bmp";
+      imgPing.style.width = "100%";
+      imgPing.style.height = "100%";
+      btnPing.appendChild(imgPing);
       divChildWindowHeader.appendChild(btnPing);
       const divChannels = document.createElement("div");
       divChildWindow.appendChild(divChannels);
