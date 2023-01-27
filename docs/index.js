@@ -421,8 +421,6 @@ async function start( [ evtWindow, ErrorLog ] ) {
       imgPing.style.height = "100%";
       btnPing.appendChild(imgPing);
       divChildWindowHeader.appendChild(btnPing);
-      const divChannels = document.createElement("div");
-      divChildWindow.appendChild(divChannels);
       const btnCreateChannel = document.createElement("button");
       btnCreateChannel.alt = "Create Channel";
       btnCreateChannel.style.display = "inline-block";
@@ -437,7 +435,6 @@ async function start( [ evtWindow, ErrorLog ] ) {
       divChannels.style.paddingLeft = "10%";
       divChannels.style.width = "100%";
       divChildWindow.appendChild(divChannels);
-      const thisWindowChannels = new Map();
       // Click Listeners
       btnViewWindowLog.addEventListener("click", function () {
         showLog(childWindowLog);
