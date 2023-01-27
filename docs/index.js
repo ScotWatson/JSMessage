@@ -639,6 +639,13 @@ async function start( [ evtWindow, ErrorLog ] ) {
       divParentWindow.appendChild(divChannels);
       function mainParentWindowMessageHandler(evt) {
         switch (evt.data.type) {
+          case "ping": {
+            parentWindow.postMessage({
+              type: "echo",
+            });
+            addEntry(parentWindowLog, "Ping & Echo");
+            break;
+          }
           case "port": {
             const parentWindowChannelLog = createLog();
             const channelName = evt.data.name;
