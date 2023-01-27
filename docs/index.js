@@ -600,13 +600,13 @@ async function start( [ evtWindow, ErrorLog ] ) {
           source: (function () {
             switch (evt.source) {
               case self.window: {
-                return "This Window";
+                return evt.source.name + " (This Window)";
               }
               case childWindow: {
-                return "Child Window";
+                return evt.source.name + " (Child Window)";
               }
               default: {
-                return "Other Window";
+                return evt.source.name + " (Other Window)";
               }
             };
           })(),
@@ -694,7 +694,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
             port.start();
             channels.set(channelName, port);
             function parentWindowMessageHandler(evt) {
-              addEntry(parentWindowChannelLog, "Data: " + evt.data);
+              addEntry(parentWindowChannelLog, "Recieved: " + evt.data);
             }
             function parentWindowMessageErrorHandler(evt) {
               addEntry(parentWindowChannelLog, "Error: " + evt);
