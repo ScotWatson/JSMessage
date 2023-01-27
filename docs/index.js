@@ -410,7 +410,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       imgChildWindow.src = "ChildWindow.bmp";
       imgChildWindow.style.width = "10%";
       imgChildWindow.style.height = "100%";
-      imgChildWindow.appendChild(imgChildWindow);
+      divChildWindowHeader.appendChild(imgChildWindow);
       const divChildWindowName = document.createElement("div");
       divChildWindowName.style.display = "inline-block";
       divChildWindowName.style.width = "50%";
@@ -767,7 +767,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
       } else {
         fromWindow.postMessage({
           type: "error",
-          message: "ping must be sent to begin communication",
+          message: "ping must be sent to begin communication, type received: " + evt.data.type,
         }, fromOrigin);
       }
     }
