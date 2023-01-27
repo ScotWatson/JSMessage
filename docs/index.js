@@ -65,7 +65,9 @@ async function start( [ evtWindow, ErrorLog ] ) {
     function deleteLog(divLog) {
       divLog.remove();
     }
-    self.window.name = self.prompt("Enter the name for this window:");
+    if (self.window.name === "") {
+      self.window.name = self.prompt("Enter the name for this window:");
+    }
     // Layout
     document.body.style.width = "100%";
     document.body.style.height = window.innerHeight + "px";
@@ -393,8 +395,10 @@ async function start( [ evtWindow, ErrorLog ] ) {
       }, 500);
       // Layout
       const divChildWindow = document.createElement("div");
+      divChildWindow.style.width = "100%";
       divChildWindows.appendChild(divChildWindow);
       const divChildWindowHeader = document.createElement("div");
+      divChildWindowHeader.style.width = "100%";
       divChildWindow.appendChild(divChildWindowHeader);
       const btnViewWindowLog = document.createElement("button");
       btnViewWindowLog.alt = "View Child Window Log";
@@ -407,8 +411,8 @@ async function start( [ evtWindow, ErrorLog ] ) {
       btnViewWindowLog.appendChild(imgViewWindowLog);
       divChildWindowHeader.appendChild(btnViewWindowLog);
       const divChildWindowName = document.createElement("div");
-      divChildWindowHeader.style.display = "inline-block";
-      divChildWindowHeader.style.width = "50%";
+      divChildWindowName.style.display = "inline-block";
+      divChildWindowName.style.width = "50%";
       divChildWindowName.appendChild(document.createTextNode(childWindowName));
       divChildWindowHeader.appendChild(divChildWindowName);
       const btnPing = document.createElement("button");
