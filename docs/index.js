@@ -447,6 +447,16 @@ async function start( [ evtWindow, ErrorLog ] ) {
       imgCreateChannel.style.height = "100%";
       btnCreateChannel.appendChild(imgCreateChannel);
       divChildWindowHeader.appendChild(btnCreateChannel);
+      const btnCloseWindow = document.createElement("button");
+      btnCloseWindow.alt = "Create Channel";
+      btnCloseWindow.style.display = "inline-block";
+      btnCloseWindow.style.width = "10%";
+      const imgCloseWindow = document.createElement("img");
+      imgCloseWindow.src = "Delete.bmp";
+      imgCloseWindow.style.width = "100%";
+      imgCloseWindow.style.height = "100%";
+      btnCloseWindow.appendChild(imgCloseWindow);
+      divChildWindowHeader.appendChild(btnCloseWindow);
       const divChannels = document.createElement("div");
       divChannels.style.paddingLeft = "10%";
       divChannels.style.width = "100%";
@@ -472,8 +482,10 @@ async function start( [ evtWindow, ErrorLog ] ) {
         };
         childWindow.postMessage(obj, otherOrigin, [ newWindowChannel.port2 ] );
         const port = newWindowChannel.port1;
+        port.addEventListener("message", channelMessageHandler);
+        port.addEventListener("messageerror", channelMessageErrorHandler);
         port.start();
-        addEntry(childWindowLog, "port sent to child window");
+        addEntry(childWindowLog, "Open Channel: " + channelName);
         // Layout
         const divChannel = document.createElement("div");
         divChannels.appendChild(divChannel);
@@ -524,7 +536,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
         btnSend.addEventListener("click", function () {
           const message = self.prompt("Enter the message to send:");
           port.postMessage(message);
-          addEntry(childWindowChannelLog, "Send: " + message);
+          addEntry(childWindowChannelLog, "Sent: " + message);
         });
         btnClose.addEventListener("click", function () {
           childWindow.postMessage({
@@ -534,7 +546,19 @@ async function start( [ evtWindow, ErrorLog ] ) {
           port.close();
           addEntry(childWindowLog, "Close Channel: " + channelName);
         });
+        // Message Handlers
+        function channelMessageHandler(evt) {
+          addEntry(childWindowChannelLog, "Received: " + evt.data);
+        }
+        function channelMessageErrorHandler(evt) {
+          addEntry(childWindowChannelLog, "!!!message error!!!");
+        }
       });
+      btnCloseWindow.addEventListener("click", function () {
+        childWindow.close();
+        divChildWindow.remove();
+      });
+      // Message Handlers
       function mainChildWindowMessageHandler(evt) {
         if (evt.source !== childWindow) {
           return;
@@ -643,6 +667,8 @@ async function start( [ evtWindow, ErrorLog ] ) {
         type: "echo",
       }, parentWindowOrigin);
       addEntry(parentWindowLog, "Initial Ping & Echo");
+      const channels = new Map();
+      const channelDivs = new Map();
       // Message Handlers
       function mainParentWindowMessageHandler(evt) {
         switch (evt.data.type) {
@@ -661,6 +687,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
             port.addEventListener("message", parentWindowMessageHandler);
             port.addEventListener("messageerror", parentWindowMessageErrorHandler);
             port.start();
+            channels.set(channelName, port);
             function parentWindowMessageHandler(evt) {
               addEntry(parentWindowChannelLog, "Data: " + evt.data);
             }
@@ -669,9 +696,11 @@ async function start( [ evtWindow, ErrorLog ] ) {
             }
             // Layout
             const divChannel = document.createElement("div");
+            divChannel.style.width = "100%";
             divChannels.appendChild(divChannel);
+            channelDivs.set(channelName, divChannel);
             const imgChannel = document.createElement("img");
-            imgChannel.src = "ViewLog.bmp";
+            imgChannel.src = "Channel.bmp";
             imgChannel.style.width = "inline-block";
             imgChannel.style.width = "10%";
             divChannel.appendChild(imgChannel);
@@ -689,7 +718,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
             imgViewChannelLog.style.width = "100%";
             imgViewChannelLog.style.height = "100%";
             btnViewChannelLog.appendChild(imgViewChannelLog);
-            divParentWindow.appendChild(btnViewChannelLog);
+            divChannel.appendChild(btnViewChannelLog);
             const btnSend = document.createElement("button");
             btnSend.alt = "Send to Parent Window";
             btnSend.style.display = "inline-block";
@@ -723,6 +752,14 @@ async function start( [ evtWindow, ErrorLog ] ) {
               port.close();
               addEntry(parentWindowLog, "Close Channel: " + channelName);
             });
+            break;
+          }
+          case "close": {
+            channels.get(channelName).close();
+            channels.remove(channelName);
+            channelDivs.get(channelName).remove();
+            channelDivs.remove(channelName);
+            addEntry(parentWindowLog, "Channel Closed: " + channelName);
             break;
           }
           case "error": {
