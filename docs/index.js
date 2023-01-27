@@ -71,7 +71,7 @@ async function start( [ evtWindow, ErrorLog ] ) {
     // Layout
     document.body.style.width = "100%";
     document.body.style.height = window.innerHeight + "px";
-    document.body.style.padding = "0px";
+    document.body.style.margin = "0px";
     const divWorkersHeader = document.createElement("div");
     divWorkersHeader.style.position = "absolute";
     divWorkersHeader.style.left = "0%";
@@ -84,15 +84,14 @@ async function start( [ evtWindow, ErrorLog ] ) {
     imgWorker.src = "Worker.bmp";
     imgWorker.style.aspectRatio = "1";
     imgWorker.style.display = "inline-block";
-    imgWorker.style.position = "absolute";
-    imgWorker.style.left = "0%";
-    imgWorker.style.top = "0%";
-    imgWorker.style.height = "100%";
+    imgWorker.style.maxWidth = "10%";
+    imgWorker.style.maxHeight = "100%";
     divWorkersHeader.appendChild(imgWorker);
     const inpNewWorkerURL = document.createElement("input");
     inpNewWorkerURL.type = "text";
     inpNewWorkerURL.value = "worker.js";
     inpNewWorkerURL.style.display = "inline-block";
+    inpNewWorkerURL.style.verticalAlign = "bottom";
     inpNewWorkerURL.style.width = "80%";
     inpNewWorkerURL.style.height = "100%";
     divWorkersHeader.appendChild(inpNewWorkerURL);
@@ -104,8 +103,8 @@ async function start( [ evtWindow, ErrorLog ] ) {
     const imgCreateWorker = document.createElement("img");
     imgCreateWorker.src = "Create.bmp";
     imgCreateWorker.style.aspectRatio = "1";
-    imgCreateWorker.style.width = "100%";
-    imgCreateWorker.style.height = "100%";
+    imgCreateWorker.style.maxWidth = "100%";
+    imgCreateWorker.style.maxHeight = "100%";
     btnCreateWorker.appendChild(imgCreateWorker);
     divWorkersHeader.appendChild(btnCreateWorker);
     const divWorkers = document.createElement("div");
